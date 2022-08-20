@@ -1,0 +1,390 @@
+Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
+
+* Cài đặt môi trường:
+	- Cài NodeJS 'https://nodejs.org/en/download/'
+	- Cài Git 'https://git-scm.com/download/win'
+
+* Bắt đầu Back-end:
+	- Tạo git repo 'https://github.com/filezingme/MERN-PROJECT.git'
+		> filezingme/fbiA
+		
+		…or create a new repository on the command line
+		echo "# MERN-PROJECT" >> README.md
+		git init
+		git add README.md
+		git commit -m "first commit"
+		git branch -M main
+		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+		git push -u origin main
+		
+		…or push an existing repository from the command line
+		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+		git branch -M main
+		git push -u origin main
+		
+	- Tạo thư mục chứa project '\HenryWebDev-Project'
+		>>> git init
+			
+	- Tạo thư mục 'server':
+		>>> mkdir server
+		>>> cd server
+		>>> npm init
+			> Tạo backend cho thư mục server
+			> Nó hỏi > cứ OK/Yes hết:
+				package name: (server)
+				version: (1.0.0)
+				description:
+				entry point: (index.js)
+				test command:
+		>>> npm i express jsonwebtoken mongoose dotenv argon2 cors
+			> Cài đặt những thứ cần thiết trong dự án
+				- express: server express của chúng ta
+				- jsonwebtoken: Xác thực người dùng, quản lý login/logout/authentication 
+				- mongoose: Object modal để nói chuyện giữa server với db
+				- dotenv: lấy biến môi trường
+				- argon2: tạo Hash-Password cho người dùng
+				- cors: cho phép frontend nói chuyện backend
+		>>> npm i --save-dev nodemon
+			> Tự động khởi động lại server khi nhìn thấy code thay đổi, nếu ko có nodemon thì cứ phải tắt đi và khởi động lại server rất mất tgian
+			
+			- Update 'server\package.json'
+				- Thêm code sau trong key "scripts":
+					"server": "nodemon index"
+						> Đồng nghĩa với việc mỗi khi chạy 'npm run server' nó sẽ chạy file 'index' trong thư mục 'server'
+	- Tạo 'server\index.js'		
+		> Thiết lập server express		
+			const express = require('express')
+			const app = express()
+			app.get('/', (req, res) => res.send('Hello world'))
+			const PORT = 5000
+			app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+			
+	>>> npm run server
+		- Truy cập 'http://localhost:5000/'
+			> Hiện kết quả in ra 'Hello world'
+			
+* Install trình giả lập 'REST Client'
+	> Tạo request luôn trong VSCODE cho tiện, đỡ phải dùng POSTMAN
+	
+	- Install 'REST Client' trong vscode 
+		- Search 'REST Client' hoặc ID 'humao.rest-client'
+						
+	- Tạo file 'server\request.http' với content:
+		GET http://localhost:5000/
+			> Nhấn 'Send Request' sẽ hiện cửa sổ Response bên phải với dòng 'Hello world'
+			
+* Cài đặt MongoDB & Connect DB:
+	- Truy cập 'https://www.mongodb.com/cloud'
+		> Chọn đăng nhập với tài khoản filezingme@gmail.com/bkA
+		
+		- Đăng nhập thành công thì trở lại trang chủ 'https://cloud.mongodb.com/'
+			> Chọn 'New Project'
+				- Project name: 'mern-henrywebdev'
+				- Add Members and Set Permissions: trống
+				- Click 'Create Project'
+					- Click 'Build a Database'
+					- Chọn free
+						- Chọn AWS
+						- Cloud Provider & Region: 'Sydney (ap-southeast-2)'
+						- Cluster Name: 'mern-henrywebdev'
+						> Click 'Create Cluster'
+					- Tạo xong Cluster trên thì vào 'https://cloud.mongodb.com/v2/6301324f5b7806501fd7ff37#clusters'
+						> Click 'Connect'
+							- Add a connection IP address: 'Allow Access from Anywhere'
+							- Create a database user: sa/bangkieu
+							- Click 'Create Database User'
+						> Click 'Choose a connection method'
+							- Chọn 'Connect your application'
+							- Copy connection string:
+								mongodb+srv://sa:<password>@mern-henrywebdev.vggcelm.mongodb.net/?retryWrites=true&w=majority
+	- Update 'server\index.js'
+		> Nếu có lỗi kiểu như 'MongoParseError: options useCreateIndex, useFindAndModify are not supported' thì tham khảo:
+			'https://stackoverflow.com/questions/68958221/mongoparseerror-options-usecreateindex-usefindandmodify-are-not-supported'
+			
+		const express = require('express')
+		const mongoose = require('mongoose')
+		const connectDB = async() => {
+			try {
+				await mongoose.connect(`mongodb+srv://sa:bangkieu@mern-henrywebdev.vggcelm.mongodb.net/?retryWrites=true&w=majority`, {
+					//useCreateIndex: true,
+					useNewUrlParser: true,
+					useUnifiedTopology: true,
+					//useFindAndModify: false
+				})
+
+				console.log('MongoDB connected')
+			} catch (error) {
+				console.log(error.message)
+				process.exit(1)
+			}
+		}
+		connectDB()
+		.....
+
+* Tạo DB Models
+	- Tạo file 'server\models\User.js'
+		const mongoose = require('mongoose')
+		const Schema = mongoose.Schema
+
+		const UserSchema = new Schema({
+			username: {
+				type: String,
+				require: true,
+				unique: true
+			},    
+			password: {
+				type: String,
+				require: true
+			},
+			createdAt: {
+				type: Date,
+				default: Date.now
+			}
+		})
+
+		module.exports = mongoose.model('users', UserSchema)
+		
+	- Tạo file 'server\models\Post.js'
+		const mongoose = require('mongoose')
+		const Schema = mongoose.Schema
+
+		const PostSchema = new Schema({
+			title: {
+				type: String,
+				require: true
+			},    
+			description: {
+				type: String
+			},
+			url: {
+				type: String
+			},
+			status: {
+				type: String,
+				enum: ['TO LEARN','LEARNING','LEANRED']
+			},
+			user: {
+				type: Schema.Types.ObjectId,
+				ref: 'users'
+			}
+		})
+
+		module.exports = mongoose.model('posts', PostSchema)
+		
+* Tạo Router Auth:
+	- Tạo file 'server\routes\auth.js'
+		const express = require('express')
+		const router = express.Router()
+
+		const User = require('../models/User')
+
+		router.get('/', (req, res) => {res.send('USER ROUTE')})
+
+		module.exports = router
+		
+	- Update 'server\index.js'
+		...
+		const authRouter = require('./routes/auth')
+		...
+		app.use('/api/auth', authRouter)
+		...
+	
+	- Update 'server\request.http'
+		GET http://localhost:5000/api/auth
+			> Nhấn 'Send Request' sẽ response 'USER ROUTE'
+			
+* Register api:
+	- Tạo file 'server\.env'
+		> file cấu hình các biến để bảo mật
+			DB_USERNAME=sa
+			DB_PASSWORD=bk
+			ACCESS_TOKEN_SECRET=fhsaiofyw9euhfgslafls
+			
+	- Update 'server\index.js'
+		require('dotenv').config()
+		...
+		await mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@mern-henrywebdev.vggcelm.mongodb.net/?retryWrites=true&w=majority`, {
+		...
+		app.use(express.json())
+		...
+			
+	- Update 'server\routes\auth.js'
+		const express = require('express')
+		const router = express.Router()
+		const argon2 = require('argon2')
+		const jwt = require('jsonwebtoken')
+
+		const User = require('../models/User')
+
+		//@route POST api/auth/register
+		//@desc Register user
+		//@access Public
+		router.post('/register', async (req, res) => {
+			const { username, password } = req.body
+
+			//Simple validation
+			if (!username || !password)
+				return res.status(400).json({ success: false, message: 'Missing username and/or password' })
+
+			try {
+				//Check for existing user
+				const user = await User.findOne({ username })
+
+				if (user) 
+					return res.status(400).json({ success: false, message: 'Username already taken' })
+
+				//All good
+				const hashedPassword = await argon2.hash(password)
+				const newUser = new User({username, password: hashedPassword})
+				await newUser.save()
+
+				//Return token
+				const accessToken = jwt.sign(
+					{userId: newUser._id}, 
+					process.env.ACCESS_TOKEN_SECRET
+				)
+
+				res.json({success: true, message: 'User created successfully', accessToken})
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({ success: false, message: 'Internal server error' })
+			}
+		})
+
+		module.exports = router
+	
+	- Update 'server\request.http'
+		POST http://localhost:5000/api/auth/register
+		POST http://localhost:5000/api/auth/register
+		Content-Type: application/json
+
+		{
+			"username": "tai 1",
+			"password": "123"
+		}
+			
+			> Nhấn 'Send Request' sẽ response:
+				{
+					"success": true,
+					"message": "User created successfully",
+					"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTQzMzQyOGM5YTEwYjUxYmZmNWYiLCJpYXQiOjE2NjEwMzE0NzV9.pvl7qO9MasqDSELstDHXrakhpAjOz0wm6xRUAHhUmg8"
+				}
+			> Truy cập 'https://jwt.io/' check thông tin 'accessToken'
+			
+* Login api:
+	- Update 'server\routes\auth.js'
+		- Add code:
+			//@route POST api/auth/login
+			//@desc Login user
+			//@access Public
+			router.post('/login', async (req, res) => {
+				const { username, password } = req.body
+
+				//Simple validation
+				if (!username || !password)
+					return res.status(400).json({ success: false, message: 'Missing username and/or password' })
+
+				try {
+					//Check for existing user
+					const user = await User.findOne({ username })
+
+					if (!user)
+						return res.status(400).json({ success: false, message: 'Incorrect username or password' })
+
+					//Username found
+					const passwordValid = await argon2.verify(user.password, password)
+
+					if (!passwordValid)
+						return res.status(400).json({ success: false, message: 'Incorrect username or password' })
+
+					//All good
+					//Return token
+					const accessToken = jwt.sign(
+						{ userId: user._id },
+						process.env.ACCESS_TOKEN_SECRET
+					)
+
+					res.json({ success: true, message: 'User logged in successfully', accessToken })
+
+				} catch (error) {
+					console.log(error)
+					res.status(500).json({ success: false, message: 'Internal server error' })
+				}
+			})
+	
+	- Update 'server\request.http'
+		- Add code:
+			###
+
+			POST http://localhost:5000/api/auth/login
+			Content-Type: application/json
+
+			{
+				"username": "tai",
+				"password": "123"
+			}
+			
+* Posts api:
+	- Add 'server\routes\post.js'
+		const express = require('express')
+		const router = express.Router()
+
+		const Post = require('../models/Post')
+
+		//@route POST api/posts
+		//@desc Create post
+		//@access Private
+		router.post('/', async (req, res) => {
+			const { title, description, url, status } = req.body
+
+			//Simple valication
+			if (!title)
+				return res.status(400).json({ success: false, message: 'Title is required' })
+
+			try {
+				const newPost = new Post({
+					title,
+					description,
+					url: url.startsWith('https://') ? url : `https://${url}`,
+					status: status || 'TO LEARN',
+					user: '630155c2428c9a10b51bff63'
+				})
+
+				await newPost.save()
+
+				res.json({ success: true, message: 'Happy learning!', post: newPost })
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({ success: false, message: 'Internal server error' })
+			}
+		})
+
+		module.exports = router
+		
+	- Update 'server\index.js'
+		...
+		const postRouter = require('./routes/post')
+		...
+		app.use('/api/posts', postRouter)
+		...
+	
+	- Update 'server\request.http'
+		- Add code:
+			POST http://localhost:5000/api/posts
+			Content-Type: application/json
+
+			{
+				"title": "my first post",
+				"description": "abc",
+				"url": "google.com",
+				"status": "LEARNING"
+			}
+			
+	- Tạo 'server\middleware\auth.js'
+		> Thằng này đứng giữa kiểm tra có accessToken trong header hay không, nếu hàng xịn nó tiếp tục cho qua để đi vào router.post(...) của file 'server\routes\post.js'
+		> 
+		
+		
+		dừng phút 60 của video 'https://youtu.be/rgFd17fyM4A?t=3691'
