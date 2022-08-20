@@ -12,14 +12,15 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		echo "# MERN-PROJECT" >> README.md
 		git init
 		git add README.md
+		git add .
+		git status
 		git commit -m "first commit"
-		git branch -M main
-		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
-		git push -u origin main
 		
-		…or push an existing repository from the command line
-		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+		git config --global user.email "filezingme@gmail.com"
+		git config --global user.name "taitd"
+		
 		git branch -M main
+		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
 		git push -u origin main
 		
 	- Tạo thư mục chứa project '\HenryWebDev-Project'
