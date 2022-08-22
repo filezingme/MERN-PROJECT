@@ -764,3 +764,6 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 			> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
 		client\src\reducer\authReducer.js
 		
+		
+		
+https://youtu.be/rgFd17fyM4A?t=7234
