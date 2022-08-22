@@ -4,6 +4,11 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 * Cài đặt môi trường:
 	- Cài NodeJS 'https://nodejs.org/en/download/'
 	- Cài Git 'https://git-scm.com/download/win'
+	
+	
+--------------------------------------------------------------------------
+* Những thay đổi từ V5 tới V6:
+	> ref: 	https://viblo.asia/p/react-router-v6-gGJ59oVpZX2
 
 --------------------------------------------------------------------------
 * Bắt đầu Back-end:
@@ -711,3 +716,51 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 
 --------------------------------------------------------------------------
 * Bắt đầu Front-end
+	- Tạo React client app
+		>>> npx create-react-app client
+		>>> cd client
+		>>> npm start
+	
+	- Update 'client\src\App.css'
+		> Xem code trong file
+	
+	- Tạo folder 'assets' và các file trong nó:
+		client\src\assets
+	
+	>>> cd client
+	
+	- Install những thứ sau:
+		>>> npm i react-bootstrap bootstrap axios react-router-dom
+	
+	- Tạo folders và files:
+		client\src\components\layout\Landing.js
+		client\src\components\auth\Login.js
+		
+	- Update 'client\src\App.js'
+		- Xem code trong file
+			> Lưu ý trong V6 thì mặc định exact là true nên ko cần phải để exact
+		
+	- Tạo folder và files:
+		client\src\components\auth\LoginForm.js
+		client\src\components\auth\RegisterForm.js
+		
+	- Tạo folders và files:
+		client\src\views\Auth.js
+		
+	- Update 'client\public\index.html'
+		<link
+		  rel="stylesheet"
+		  href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css"
+		  integrity="sha256-MSALLcWJbwNhnXKVTgK+jBusxP1SGCExhv1vDIRgX4U="
+		  crossorigin="anonymous"
+		/>
+			
+		> ref: 	https://bootswatch.com/minty/
+				Clicks: https://bootswatch.com/ > Help > jsDelivr. > /npm/bootswatch@5.2.0/dist > /npm/bootswatch@5.2.0/dist/minty > /npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css > Copy HTML + SRI
+						> https://www.jsdelivr.com/package/npm/bootswatch?path=dist%2Fminty
+						
+	- Tạo folder và file:
+		client\src\contexts\AuthContext.js
+			> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
+		client\src\reducer\authReducer.js
+		
