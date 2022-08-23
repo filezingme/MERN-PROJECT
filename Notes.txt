@@ -35,6 +35,8 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
 		git pull origin main
 		
+		git pull origin main
+		
 	- Tạo thư mục chứa project '\HenryWebDev-Project'
 		>>> git init
 			
@@ -715,178 +717,304 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 				}
 
 --------------------------------------------------------------------------
-* Bắt đầu Front-end
-	- Login/Register pages
-		- Tạo React client app
-			>>> npx create-react-app client
-			>>> cd client
-			>>> npm start
-		
-		- Update 'client\src\App.css'
-			> Xem code trong file
-		
-		- Tạo folder 'assets' và các file trong nó:
-			client\src\assets
-		
+* BẮT ĐẦU FRONT-END
+
+- Login/Register pages
+	- Tạo React client app
+		>>> npx create-react-app client
 		>>> cd client
+		>>> npm start
+	
+	- Update 'client\src\App.css'
+		> Xem code trong file
+	
+	- Tạo folder 'assets' và các file trong nó:
+		client\src\assets
+	
+	>>> cd client
+	
+	- Install những thứ sau:
+		>>> npm i react-bootstrap bootstrap axios react-router-dom
+	
+	- Tạo folders và files:
+		client\src\components\layout\Landing.js
+		client\src\components\auth\Login.js
 		
-		- Install những thứ sau:
-			>>> npm i react-bootstrap bootstrap axios react-router-dom
+	- Update 'client\src\App.js'
+		- Xem code trong file
+			> Lưu ý trong V6 thì mặc định exact là true nên ko cần phải để exact
 		
+	- Tạo folder và files:
+		client\src\components\auth\LoginForm.js
+		client\src\components\auth\RegisterForm.js
+		
+	- Tạo folders và files:
+		client\src\views\Auth.js
+		
+	- Update 'client\public\index.html'
+		<link
+		  rel="stylesheet"
+		  href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css"
+		  integrity="sha256-MSALLcWJbwNhnXKVTgK+jBusxP1SGCExhv1vDIRgX4U="
+		  crossorigin="anonymous"
+		/>
+			
+		> ref: 	https://bootswatch.com/minty/
+				Do clicks: https://bootswatch.com/ > Help > jsDelivr. > /npm/bootswatch@5.2.0/dist > /npm/bootswatch@5.2.0/dist/minty > /npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css > Copy HTML + SRI
+						> https://www.jsdelivr.com/package/npm/bootswatch?path=dist%2Fminty
+						
+	
+	- Connect Service/API & handle Login:
 		- Tạo folders và files:
-			client\src\components\layout\Landing.js
-			client\src\components\auth\Login.js
-			
-		- Update 'client\src\App.js'
-			- Xem code trong file
-				> Lưu ý trong V6 thì mặc định exact là true nên ko cần phải để exact
-			
-		- Tạo folder và files:
-			client\src\components\auth\LoginForm.js
-			client\src\components\auth\RegisterForm.js
-			
-		- Tạo folders và files:
-			client\src\views\Auth.js
-			
-		- Update 'client\public\index.html'
-			<link
-			  rel="stylesheet"
-			  href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css"
-			  integrity="sha256-MSALLcWJbwNhnXKVTgK+jBusxP1SGCExhv1vDIRgX4U="
-			  crossorigin="anonymous"
-			/>
+			'client\src\contexts\constants.js'
+				export const apiUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/api' : 'production-api-url'
+				export const LOCAL_STORAGE_TOKEN_NAME = 'learnit-mern'
 				
-			> ref: 	https://bootswatch.com/minty/
-					Do clicks: https://bootswatch.com/ > Help > jsDelivr. > /npm/bootswatch@5.2.0/dist > /npm/bootswatch@5.2.0/dist/minty > /npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css > Copy HTML + SRI
-							> https://www.jsdelivr.com/package/npm/bootswatch?path=dist%2Fminty
-							
-		
-		- Connect Service/API & handle Login:
-			- Tạo folders và files:
-				'client\src\contexts\constants.js'
-					export const apiUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/api' : 'production-api-url'
-					export const LOCAL_STORAGE_TOKEN_NAME = 'learnit-mern'
-					
-				'client\src\contexts\AuthContext.js'
-					> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
-					
-						import {createContext, useReducer} from 'react'
-						import {authReducer} from '../reducer/authReducer'
-						import {apiUrl, LOCAL_STORAGE_TOKEN_NAME} from './constants'
-						import axios from 'axios'
+			'client\src\contexts\AuthContext.js'
+				> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
+				
+					import {createContext, useReducer} from 'react'
+					import {authReducer} from '../reducer/authReducer'
+					import {apiUrl, LOCAL_STORAGE_TOKEN_NAME} from './constants'
+					import axios from 'axios'
 
 
-						export const AuthContext = createContext()
+					export const AuthContext = createContext()
 
 
-						const AuthContextProvider = ({children}) => {
-							const [authState, dispath] = useReducer(authReducer, {
-								authLoading: true,
-								isAuthenticated: false,
-								user: null
-							})
+					const AuthContextProvider = ({children}) => {
+						const [authState, dispath] = useReducer(authReducer, {
+							authLoading: true,
+							isAuthenticated: false,
+							user: null
+						})
 
-							//Login
-							const loginUser = async userForm => {
-								try {
+						//Login
+						const loginUser = async userForm => {
+							try {
 
-									const response = await axios.post(`${apiUrl}/auth/login`, userForm)
+								const response = await axios.post(`${apiUrl}/auth/login`, userForm)
 
-									if (response.data.success)
-										localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
+								if (response.data.success)
+									localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
 
-									return response.data
+								return response.data
 
-								} catch (error) {
-									if (error.response.data)
-										return error.response.data
-									else
-										return { success: false, message: error.message }
-								}
+							} catch (error) {
+								if (error.response.data)
+									return error.response.data
+								else
+									return { success: false, message: error.message }
 							}
-
-							//Context data
-							const authContextData = {loginUser}
-
-							///Return provider
-							return (
-								<AuthContext.Provider value={authContextData}>
-									{children}
-								</AuthContext.Provider>
-							)
 						}
 
-						export default AuthContextProvider
-					
-				'client\src\reducer\authReducer.js'
-					...
+						//Context data
+						const authContextData = {loginUser}
+
+						///Return provider
+						return (
+							<AuthContext.Provider value={authContextData}>
+								{children}
+							</AuthContext.Provider>
+						)
+					}
+
+					export default AuthContextProvider
 				
-			- Update 'client\src\App.js'
-				- Bọc Route bằng 'AuthContextProvider'					
-					import AuthContextProvider from './contexts/AuthContext'
-					...
-					function App() {
-					  return (
-						<AuthContextProvider>
-						  <Router>
-							....
-						  </Router>
-						</AuthContextProvider>    
-					  );
-					}
-					
-			- Update 'client\src\components\auth\LoginForm.js'
-				import {useState, useContext} from 'react'
-				import { AuthContext } from '../../contexts/AuthContext'
-
-				const LoginForm = () => {
-
-					//Context
-					const {loginUser} = useContext(AuthContext)
-
-					const [loginForm, setLoginForm] = useState({
-					  username: '',
-					  password: ''
-					})
-
-					const {username, password} = loginForm
-
-					const onChangeLoginForm = event => setLoginForm({
-					  ...loginForm,
-					  [event.target.name]: event.target.value
-					})
-
-					const login = async event => {
-					  event.preventDefault()
-					  try {
-						
-						const loginData = await loginUser(loginForm)
-
-					  } catch (error) {
-						console.log(error)
-					  }
-					}
-
-					return (<>
-					  <Form className='my-4' onSubmit={login}>
-						<Form.Group>
-						  <Form.Control type='text' placeholder='Username' name='username' className='my-3' required value={username} onChange={onChangeLoginForm} />
-						</Form.Group>
-						
-						<Form.Group>
-						  <Form.Control type='password' placeholder='Password' name='password' className='my-3' required value={password} onChange={onChangeLoginForm} />
-						</Form.Group>
-						...
-					)
+			'client\src\reducer\authReducer.js'
+				...
+			
+		- Update 'client\src\App.js'
+			- Bọc Route bằng 'AuthContextProvider'					
+				import AuthContextProvider from './contexts/AuthContext'
+				...
+				function App() {
+				  return (
+					<AuthContextProvider>
+					  <Router>
+						....
+					  </Router>
+					</AuthContextProvider>    
+				  );
 				}
 				
-			- Update 'server\index.js'
-				> Fix lỗi: Access to XMLHttpRequest at 'http://localhost:5000/api/auth/login' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
-				
-				const cors = require('cors')
-				....
-				app.use(cors())
+		- Update 'client\src\components\auth\LoginForm.js'
+			...
+			import {useState, useContext} from 'react'
+			import { Link, useNavigate } from 'react-router-dom'
+			import { AuthContext } from '../../contexts/AuthContext'
+
+			const LoginForm = () => {
+
+				//Context
+				const { loginUser } = useContext(AuthContext)
+
+				//Router
+				const navigate = useNavigate();
+
+				//Local state
+				const [loginForm, setLoginForm] = useState({
+					username: '',
+					password: ''
+				})
+
+				const {username, password} = loginForm
+
+				const onChangeLoginForm = event => setLoginForm({ ...loginForm, [event.target.name]: event.target.value })
+
+				const login = async event => {
+				  event.preventDefault()
+				  try {
+					
+					const loginData = await loginUser(loginForm)
+
+					  if(loginData.success) {
+						navigate('/dashboard')
+					  }
+					  else {
+						
+					  }
+
+				  } catch (error) {
+					console.log(error)
+				  }
+				}
+
+				return (<>
+				  <Form className='my-4' onSubmit={login}>
+					<Form.Group>
+					  <Form.Control type='text' placeholder='Username' name='username' className='my-3' required value={username} onChange={onChangeLoginForm} />
+					</Form.Group>
+					
+					<Form.Group>
+					  <Form.Control type='password' placeholder='Password' name='password' className='my-3' required value={password} onChange={onChangeLoginForm} />
+					</Form.Group>
+					...
+				)
+			}
+			
+		- Update 'server\index.js'
+			> Fix lỗi: Access to XMLHttpRequest at 'http://localhost:5000/api/auth/login' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+			
+			const cors = require('cors')
+			....
+			app.use(cors())
+			
+		- Tạo file 'client\src\views\Dashboard.js'
+			
+		- Update 'client\src\App.js'
+			...
+			import Dashboard from './views/Dashboard'
+			...
+			<Route path='/dashboard' element={<Dashboard />} />
+			
+- Logged-in redirects tới trang /dashboard và không cho truy cập các trang Login/Register:
+	- Update 'server\routes\auth.js'
+		...
+		const verifyToken = require('../middleware/auth')
+		...
+		//@route GET api/auth
+		//@desc Check if user is logged in
+		//@access Public
+		router.get('/', verifyToken, async (req, res) => {
+			try {
+
+				const user = await User.findById(req.userId).select('-password')
+				if (!user)
+					return res.status(400).json({success: false, message: 'User not found'})
+				res.json({success: true, user})
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({success: false, message: 'Internal server error'})
+			}
+		})
+		
+	- Tạo mới 'client\src\utils\setAuthToken.js'
+		import axios from 'axios'
+
+		const setAuthToken = token => {
+			if (token) {
+				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+			}
+			else {
+				delete axios.defaults.headers.common['Authorization']
+			}
+		}
+
+		export default setAuthToken
+		
+	- Update 'client\src\contexts\AuthContext.js'
+		import setAuthToken from '../utils/setAuthToken'
+		...
+		//Authenticate user
+		const loadUser = async () => {
+			if(localStorage[LOCAL_STORAGE_TOKEN_NAME]) {
+				setAuthToken(localStorage[LOCAL_STORAGE_TOKEN_NAME])
+			}
+
+			try {
+				const response = await axios.get(`${apiUrl}/auth`)
+				if (response.data.success) {
+					dispath({type: 'SET_AUTH', payload: {isAuthenticated: true, user: response.data.user}})
+				}
+			} catch (error) {
+				localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+				setAuthToken(null)
+				dispath({type: 'SET_AUTH', payload: {isAuthenticated: false, user: null}})
+			}
+		}
 				
 		
+	- Update 'client\src\reducer\authReducer.js'
+		export const authReducer = (state, action) => {
+		const {type, payload: {isAuthenticated, user}} = action
+
+		switch(type) {
+			case 'SET_AUTH':
+				return {
+					...state,
+					authLoading: false,
+					isAuthenticated,
+					user
+				}
+			default:
+				return state
+		}
+	}
+	
+	- Update 'client\src\contexts\AuthContext.js'
+		import {..., useEffect} from 'react'
+		...
+		useEffect(() => {
+			loadUser()
+		}, [])
+		...
+		const authContextData = {loginUser, authState}
 		
-https://youtu.be/rgFd17fyM4A?t=8807
+	- Update 'client\src\views\Auth.js'
+		import ..., { useContext } from 'react'
+		import { AuthContext } from '../contexts/AuthContext'
+		import { Navigate } from 'react-router-dom'
+		import { Spinner } from 'react-bootstrap'
+		...
+		const {authState: {authLoading, isAuthenticated}} = useContext(AuthContext)
+
+		let body
+
+		if (authLoading)
+			body = (
+				<div className='d-flex justify-content-center mt-2'>
+					<Spinner animation='border' variant='info' />
+				</div>
+			)
+		else if (isAuthenticated)
+			return <Navigate to='/dashboard' />
+		else
+			body = (<>
+				{authRoute === 'login' && <LoginForm/> }
+				{authRoute === 'register' && <RegisterForm/> }
+			</>)
+		...
+		
+https://youtu.be/rgFd17fyM4A?t=10306

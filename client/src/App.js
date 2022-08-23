@@ -2,6 +2,7 @@ import './App.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Landing from './components/layout/Landing'
 import Auth from './views/Auth'
+import Dashboard from './views/Dashboard'
 import AuthContextProvider from './contexts/AuthContext'
 
 
@@ -22,6 +23,8 @@ function App() {
             path="/register" 
             element={<Auth authRoute='register'  />}
             exact />
+
+          <Route path='/dashboard' element={<Dashboard />} />
 
         </Routes>
       </Router>
