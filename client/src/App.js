@@ -1,9 +1,10 @@
 import './App.css';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import Landing from './components/layout/Landing'
-import Auth from './views/Auth'
-import Dashboard from './views/Dashboard'
-import AuthContextProvider from './contexts/AuthContext'
+import LandingLayout from './components/layouts/LandingLayout'
+import AuthView from './views/AuthView'
+import DashboardView from './views/DashboardView'
+import AuthContextProvider from './contexts/authContext'
+import PrivateRoute from './components/routing/PrivateRoute';
 
 
 function App() {
@@ -12,19 +13,19 @@ function App() {
       <Router>
         <Routes>
 
-          <Route path="/" element={<Landing />} /> {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
+          <Route path="/" element={<LandingLayout />} /> {/* <Route path="/" element={<Navigate replace to="/login" />} /> */}
           
           <Route 
             path="/login" 
-            element={<Auth authRoute='login'  />}
+            element={<AuthView authRoute='login'  />}
             exact />
           
           <Route 
             path="/register" 
-            element={<Auth authRoute='register'  />}
+            element={<AuthView authRoute='register'  />}
             exact />
 
-          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path="/dashboard" element={<PrivateRoute element={DashboardView} />} /> {/* <Route path='/dashboard' element={<DashboardView />} /> */}
 
         </Routes>
       </Router>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const setAuthToken = token => {
+const setAuthTokenUtil = token => {
     if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
@@ -9,4 +9,4 @@ const setAuthToken = token => {
     }
 }
 
-export default setAuthToken
+export default setAuthTokenUtil

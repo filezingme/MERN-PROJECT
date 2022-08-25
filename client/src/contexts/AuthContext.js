@@ -1,11 +1,12 @@
 import {createContext, useReducer, useEffect} from 'react'
 import {authReducer} from '../reducer/authReducer'
-import {apiUrl, LOCAL_STORAGE_TOKEN_NAME} from './constants'
+import {API_URL} from '../constants/commonContants'
+import {LOCAL_STORAGE_TOKEN_NAME} from '../constants/authConstants'
 import axios from 'axios'
-import setAuthToken from '../utils/setAuthToken'
+import setAuthTokenUtil from '../utils/setAuthTokenUtil'
 
 
-export const AuthContext = createContext()
+export const authContext = createContext()
 
 
 const AuthContextProvider = ({children}) => {
@@ -19,18 +20,25 @@ const AuthContextProvider = ({children}) => {
     //Authenticate user
     const loadUser = async () => {
         if(localStorage[LOCAL_STORAGE_TOKEN_NAME]) {
-            setAuthToken(localStorage[LOCAL_STORAGE_TOKEN_NAME])
+            setAuthTokenUtil(localStorage[LOCAL_STORAGE_TOKEN_NAME])
         }
 
         try {
-            const response = await axios.get(`${apiUrl}/auth`)
+            const response = await axios.get(`${API_URL}/auth`)
             if (response.data.success) {
-                dispath({type: 'SET_AUTH', payload: {isAuthenticated: true, user: response.data.user}})
+                dispath({
+                    type: 'SET_AUTH', 
+                    payload: {isAuthenticated: true, user: response.data.user}
+                })
             }
         } catch (error) {
             localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
-            setAuthToken(null)
-            dispath({type: 'SET_AUTH', payload: {isAuthenticated: false, user: null}})
+            setAuthTokenUtil(null)
+
+            dispath({
+                type: 'SET_AUTH', 
+                payload: {isAuthenticated: false, user: null}
+            })
         }
     }
 
@@ -44,10 +52,12 @@ const AuthContextProvider = ({children}) => {
     const loginUser = async userForm => {
         try {
 
-            const response = await axios.post(`${apiUrl}/auth/login`, userForm)
+            const response = await axios.post(`${API_URL}/auth/login`, userForm)
 
             if (response.data.success)
                 localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
+
+            await loadUser()
                 
             return response.data
 
@@ -66,9 +76,9 @@ const AuthContextProvider = ({children}) => {
 
     ///Return provider
     return (
-        <AuthContext.Provider value={authContextData}>
+        <authContext.Provider value={authContextData}>
             {children}
-        </AuthContext.Provider>
+        </authContext.Provider>
     )
 }
 

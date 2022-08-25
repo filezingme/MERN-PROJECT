@@ -3,12 +3,12 @@
 import { Button, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useContext } from 'react'
-import { AuthContext } from '../../contexts/AuthContext'
+import { authContext } from '../../contexts/authContext'
 
 const LoginForm = () => {
 
   //Context
-  const { loginUser } = useContext(AuthContext)
+  const { loginUser } = useContext(authContext)
 
   //Router
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const LoginForm = () => {
 
   const onChangeLoginForm = event => setLoginForm({ ...loginForm, [event.target.name]: event.target.value })
 
-  const login = async event => {
+  const handleLogin = async event => {
     event.preventDefault()
 
     try {
@@ -31,7 +31,7 @@ const LoginForm = () => {
       const loginData = await loginUser(loginForm)
 
       if(loginData.success) {
-        navigate('/dashboard')
+        //navigate('/dashboard')
       }
       else {
         
@@ -43,7 +43,7 @@ const LoginForm = () => {
   }
 
   return (<>
-    <Form className='my-4' onSubmit={login}>
+    <Form className='my-4' onSubmit={handleLogin}>
       <Form.Group>
         <Form.Control type='text' placeholder='Username' name='username' className='my-3' required value={username} onChange={onChangeLoginForm} />
       </Form.Group>

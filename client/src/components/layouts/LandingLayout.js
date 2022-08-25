@@ -1,10 +1,10 @@
 import React from 'react'
 import {Navigate } from 'react-router-dom'
 
-const Landing = () => {
+const LandingLayout = () => {
   return (
     <Navigate to='/login' />
   )
 }
 
-export default Landing
+export default LandingLayout

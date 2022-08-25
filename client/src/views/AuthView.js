@@ -1,13 +1,13 @@
 import React, { useContext } from 'react'
 import LoginForm from '../components/auth/LoginForm'
 import RegisterForm from '../components/auth/RegisterForm'
-import { AuthContext } from '../contexts/AuthContext'
+import { authContext } from '../contexts/authContext'
 import { Navigate } from 'react-router-dom'
 import { Spinner } from 'react-bootstrap'
 
-const Auth = ({authRoute}) => {
+const AuthView = ({authRoute}) => {
 
-    const {authState: {authLoading, isAuthenticated}} = useContext(AuthContext)
+    const {authState: {authLoading, isAuthenticated}} = useContext(authContext)
 
     let body
 
@@ -38,4 +38,4 @@ const Auth = ({authRoute}) => {
     </>)
 }
 
-export default Auth
+export default AuthView

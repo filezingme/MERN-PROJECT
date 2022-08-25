@@ -35,8 +35,6 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
 		git pull origin main
 		
-		git pull origin main
-		
 	- Tạo thư mục chứa project '\HenryWebDev-Project'
 		>>> git init
 			
@@ -749,7 +747,7 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		client\src\components\auth\RegisterForm.js
 		
 	- Tạo folders và files:
-		client\src\views\Auth.js
+		client\src\views\AuthView.js
 		
 	- Update 'client\public\index.html'
 		<link
@@ -766,20 +764,23 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 	
 	- Connect Service/API & handle Login:
 		- Tạo folders và files:
-			'client\src\contexts\constants.js'
-				export const apiUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/api' : 'production-api-url'
+			'client\src\constants\commonContants.js'
+				export const API_URL = process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/api' : 'production-api-url'
+
+			'client\src\constants\authConstants.js'
 				export const LOCAL_STORAGE_TOKEN_NAME = 'learnit-mern'
 				
-			'client\src\contexts\AuthContext.js'
+			'client\src\contexts\authContext.js'
 				> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
 				
 					import {createContext, useReducer} from 'react'
 					import {authReducer} from '../reducer/authReducer'
-					import {apiUrl, LOCAL_STORAGE_TOKEN_NAME} from './constants'
+					import {API_URL} from '../constants/commonContants'
+					import {LOCAL_STORAGE_TOKEN_NAME} from '../constants/authConstants'
 					import axios from 'axios'
 
 
-					export const AuthContext = createContext()
+					export const authContext = createContext()
 
 
 					const AuthContextProvider = ({children}) => {
@@ -793,7 +794,7 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 						const loginUser = async userForm => {
 							try {
 
-								const response = await axios.post(`${apiUrl}/auth/login`, userForm)
+								const response = await axios.post(`${API_URL}/auth/login`, userForm)
 
 								if (response.data.success)
 									localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
@@ -813,9 +814,9 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 
 						///Return provider
 						return (
-							<AuthContext.Provider value={authContextData}>
+							<authContext.Provider value={authContextData}>
 								{children}
-							</AuthContext.Provider>
+							</authContext.Provider>
 						)
 					}
 
@@ -826,7 +827,7 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 			
 		- Update 'client\src\App.js'
 			- Bọc Route bằng 'AuthContextProvider'					
-				import AuthContextProvider from './contexts/AuthContext'
+				import AuthContextProvider from './contexts/authContext'
 				...
 				function App() {
 				  return (
@@ -842,12 +843,12 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 			...
 			import {useState, useContext} from 'react'
 			import { Link, useNavigate } from 'react-router-dom'
-			import { AuthContext } from '../../contexts/AuthContext'
+			import { authContext } from '../../contexts/authContext'
 
 			const LoginForm = () => {
 
 				//Context
-				const { loginUser } = useContext(AuthContext)
+				const { loginUser } = useContext(authContext)
 
 				//Router
 				const navigate = useNavigate();
@@ -900,13 +901,13 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 			....
 			app.use(cors())
 			
-		- Tạo file 'client\src\views\Dashboard.js'
+		- Tạo file 'client\src\views\DashboardView.js'
 			
 		- Update 'client\src\App.js'
 			...
-			import Dashboard from './views/Dashboard'
+			import DashboardView from './views/DashboardView'
 			...
-			<Route path='/dashboard' element={<Dashboard />} />
+			<Route path='/DashboardView' element={<DashboardView />} />
 			
 - Logged-in redirects tới trang /dashboard và không cho truy cập các trang Login/Register:
 	- Update 'server\routes\auth.js'
@@ -930,10 +931,10 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 			}
 		})
 		
-	- Tạo mới 'client\src\utils\setAuthToken.js'
+	- Tạo mới 'client\src\utils\setAuthTokenUtil.js'
 		import axios from 'axios'
 
-		const setAuthToken = token => {
+		const setAuthTokenUtil = token => {
 			if (token) {
 				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 			}
@@ -942,25 +943,25 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 			}
 		}
 
-		export default setAuthToken
+		export default setAuthTokenUtil
 		
-	- Update 'client\src\contexts\AuthContext.js'
-		import setAuthToken from '../utils/setAuthToken'
+	- Update 'client\src\contexts\authContext.js'
+		import setAuthTokenUtil from '../utils/setAuthTokenUtil'
 		...
 		//Authenticate user
 		const loadUser = async () => {
 			if(localStorage[LOCAL_STORAGE_TOKEN_NAME]) {
-				setAuthToken(localStorage[LOCAL_STORAGE_TOKEN_NAME])
+				setAuthTokenUtil(localStorage[LOCAL_STORAGE_TOKEN_NAME])
 			}
 
 			try {
-				const response = await axios.get(`${apiUrl}/auth`)
+				const response = await axios.get(`${API_URL}/auth`)
 				if (response.data.success) {
 					dispath({type: 'SET_AUTH', payload: {isAuthenticated: true, user: response.data.user}})
 				}
 			} catch (error) {
 				localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
-				setAuthToken(null)
+				setAuthTokenUtil(null)
 				dispath({type: 'SET_AUTH', payload: {isAuthenticated: false, user: null}})
 			}
 		}
@@ -983,7 +984,7 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		}
 	}
 	
-	- Update 'client\src\contexts\AuthContext.js'
+	- Update 'client\src\contexts\authContext.js'
 		import {..., useEffect} from 'react'
 		...
 		useEffect(() => {
@@ -992,13 +993,13 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		...
 		const authContextData = {loginUser, authState}
 		
-	- Update 'client\src\views\Auth.js'
+	- Update 'client\src\views\AuthView.js'
 		import ..., { useContext } from 'react'
-		import { AuthContext } from '../contexts/AuthContext'
+		import { authContext } from '../contexts/authContext'
 		import { Navigate } from 'react-router-dom'
 		import { Spinner } from 'react-bootstrap'
 		...
-		const {authState: {authLoading, isAuthenticated}} = useContext(AuthContext)
+		const {authState: {authLoading, isAuthenticated}} = useContext(authContext)
 
 		let body
 
@@ -1015,6 +1016,49 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 				{authRoute === 'login' && <LoginForm/> }
 				{authRoute === 'register' && <RegisterForm/> }
 			</>)
-		...
 		
-https://youtu.be/rgFd17fyM4A?t=10306
+- Bảo vệ Route
+	> Truy cập /dashboard nếu chưa login sẽ redirect lại Login:
+	> Ref: https://stackoverflow.com/questions/69864165/error-privateroute-is-not-a-route-component-all-component-children-of-rou
+	
+	- Tạo 'client\src\components\routing\PrivateRoute.js'
+		import {useContext} from 'react'
+		import { Navigate } from 'react-router-dom'
+		import { authContext } from '../../contexts/authContext'
+		import { Spinner } from 'react-bootstrap'
+
+		const PrivateRoute = ({element: Element}) => {
+
+			const {authState: {authLoading, isAuthenticated}} = useContext(authContext)
+
+			if(authLoading)
+			{
+				return (
+					<div className='spinner-container'>
+						<Spinner animation='border' variant='info' />
+					</div>
+				)
+			}
+
+			return isAuthenticated ? <Element /> : <Navigate to="/login" />
+		}
+
+		export default PrivateRoute
+		
+	- Update 'client\src\App.js'
+		import PrivateRoute from './components/routing/PrivateRoute';
+		...
+		<Route path="/dashboard" element={<PrivateRoute element={DashboardView} />} />
+		
+	- Update 'client\src\contexts\authContext.js'
+		> Fix lỗi khi login success nhưng không redirect được tới dashboard page
+		
+		const loginUser = async userForm => {
+			try {
+				...
+				await loadUser()					
+				...
+			}
+			...
+		}
+	
