@@ -9,6 +9,72 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 --------------------------------------------------------------------------
 * Những thay đổi từ V5 tới V6:
 	> ref: 	https://viblo.asia/p/react-router-v6-gGJ59oVpZX2
+	
+--------------------------------------------------------------------------	
+* Một ví dụ để hiểu luồng chạy useReducer() hook
+	//useReducer()
+	1. Init state: 0
+	2. Actions: Up (state + 1) / Down (state - 1)
+	3. Reducer
+	4. Dispatch
+	
+	//Init state
+	const initState = 0
+	
+	//Actions
+	const UP_ACTION = 'up'
+	const DOWN_ACTION = 'down'
+	
+	//Reducer
+	const reducer = (state, action) => {
+		console.log(reducer running...)
+		switch(action) {
+			case UP_ACTION:
+				return state + 1
+			case DOWN_ACTION:
+				return state - 1
+			default:
+				throw new Error('Invalid action')
+		}
+	}
+	
+	function App() {
+		const [count, dispatch] = useReducer(reducer, initState)
+		
+		return (
+			<div>
+				<h1>{count}</h1>
+				<button onClick={() => dispatch(DOWN_ACTION)}>Down</button>
+				<button onClick={() => dispatch(UP_ACTION)}>Up</button>
+			</div>
+		)
+	}
+	/*
+		Giải thích:
+		  - Đầu tiên khởi tạo initState và Actions
+		  - Tạo một hàm reducer với 2 tham số đầu vào là state và action
+		  - Gọi useReducer
+		  	const [count, dispatch] = useReducer(reducer, initState)
+		  		> giống như useState nên count = initState (giá trị khởi tạo ban đầu)
+		  		> thay vì như useState dùng setCount thì useReducer dùng dispatch
+		  		> useReducer sử dụng 2 tham số: 
+		  			- tham số đầu là một reducer
+		  			- tham số 2 là initState (giá trị khởi tạo ban đầu)
+		  > Những lưu ý: 
+		  	- Kiểu giá trị trả về của hàm reducer phải cùng kiểu với initState (giá trị khởi tạo ban đầu)
+		  	- Khi chưa sự kiện onClick chưa xảy ra thì "const [count, dispatch] = useReducer(reducer, initState)" vẫn chạy qua và count được gán = initState nhưng hàm 'reducer' chưa hề được chạy vào
+		  	- Khi onClick xảy ra nó sẽ chạy vào trong hàm reducer tìm action tương ứng đối số truyền vào và tính toán trả về state mới (cùng kiểu dữ liệu với initState)
+		  		> Lưu ý là reducer trả về state mới
+		  	- reducer trả về state mới thì render sẽ được refresh giống như trường hợp useState thôi
+		  > Trên là trường hợp dispatch truyền vào mỗi 1 tham số là Action name. 
+		    Trong trường hợp sử dụng thực tết phức tạp hơn là tham số truyền vào cho dispatch là một object bao gồm 2 key là tên action và payload để chứa data
+			
+		> Refs:
+			> Todo App with useReducer() hook
+				https://www.youtube.com/watch?v=yn-8PVKBBn0
+			> useReducer() hook
+				https://www.youtube.com/watch?v=p54lj4vM_LA
+	*/
 
 --------------------------------------------------------------------------
 * Bắt đầu Back-end:
