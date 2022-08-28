@@ -1,10 +1,11 @@
 Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 
+Ref react:https://www.w3schools.com/react/default.asp
+
 --------------------------------------------------------------------------
 * Cài đặt môi trường:
 	- Cài NodeJS 'https://nodejs.org/en/download/'
-	- Cài Git 'https://git-scm.com/download/win'
-	
+	- Cài Git 'https://git-scm.com/download/win'	
 	
 --------------------------------------------------------------------------
 * React Những thay đổi từ V5 tới V6:
