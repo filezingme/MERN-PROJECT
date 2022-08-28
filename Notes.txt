@@ -7,8 +7,28 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 	
 	
 --------------------------------------------------------------------------
-* Những thay đổi từ V5 tới V6:
+* React Những thay đổi từ V5 tới V6:
 	> ref: 	https://viblo.asia/p/react-router-v6-gGJ59oVpZX2
+	
+* React nếu 'npm start' gặp lỗi:
+	'react-scripts is not recognized as an internal or external command, operable program or batch file.'
+		> It is an error about react-scripts file missing in your node_modules/ directory at the time of installation.
+			Check your react-script dependency is avaliable or not in package.json.
+			If not available then add it manually via:
+			>>> npm install react-scripts --save
+			
+* Server node nếu gặp lỗi:
+	'[nodemon] app crashed - waiting for file changes before starting...'
+		> ref: https://stackoverflow.com/questions/37486631/nodemon-app-crashed-waiting-for-file-changes-before-starting
+		1. Go to the task manager
+		2. Then look for Node.js: Server-side JavaScript
+		3. Then right click on it and End task from the processes. 
+		
+		hoặc:
+		> https://stackoverflow.com/questions/37486631/nodemon-app-crashed-waiting-for-file-changes-before-starting
+			Sometimes it happenes when you forget to source your '.env' files
+
+
 	
 --------------------------------------------------------------------------	
 * Một ví dụ để hiểu luồng chạy useReducer() hook
@@ -98,6 +118,7 @@ Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 		
 		- Pull code from Git repo tới New Folder trên máy mới:
 		git init
+		git branch -M main
 		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
 		git pull origin main
 		
