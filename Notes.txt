@@ -28,7 +28,12 @@ Ref react:https://www.w3schools.com/react/default.asp
 		hoặc:
 		> https://stackoverflow.com/questions/37486631/nodemon-app-crashed-waiting-for-file-changes-before-starting
 			Sometimes it happenes when you forget to source your '.env' files
-
+			
+* Server nếu gặp lỗi:
+	'MongoServerError: user is not allowed to do action [find] on [test.users]'
+		> ref: https://stackoverflow.com/questions/46649390/mongoerror-user-is-not-allowed-to-do-action
+		- Go to Atlas website: https://cloud.mongodb.com/v2/6301324f5b7806501fd7ff37#security/database/users
+			> Database Access > Database Users > Edit(your user) > Built-in Role >> change to Atlas admin
 
 	
 --------------------------------------------------------------------------	
@@ -805,7 +810,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 --------------------------------------------------------------------------
 * BẮT ĐẦU FRONT-END
 
-- Login/Register pages
+- Tạo Login page
 	- Tạo React client app
 		>>> npx create-react-app client
 		>>> cd client
@@ -1150,3 +1155,129 @@ Ref react:https://www.w3schools.com/react/default.asp
 			...
 		}
 	
+- Hiển thị Alert khi login fails
+	- Tạo file 'client\src\components\layouts\AlertMessage.js'
+		> rafce+tab:
+			import React from 'react'
+			import { Alert } from 'react-bootstrap';
+			import AlertMessage from '../layouts/AlertMessage'
+
+			const AlertMessage = ({info}) => {
+			  return info && (
+				<Alert variant={info.type}>{info.message}</Alert>
+			  )
+			}
+
+			export default AlertMessage
+	
+	- Update 'client\src\components\auth\LoginForm.js'
+		...
+		const [ alert, setAlert ] = useState(null)
+		...
+		setAlert({type: 'danger', message: loginData.message})
+        //show alert for a few second and then hide it
+        setTimeout(() => setAlert(null), 3000)
+		...
+		<AlertMessage info={alert} />
+		...
+		
+		
+- Tạo Register page
+	- Update 'client\src\components\auth\RegisterForm.js'
+		import { useState, useContext } from 'react'
+		import { authContext } from '../../contexts/authContext'
+		import AlertMessage from '../layouts/AlertMessage'
+		...
+		[Xem code...]
+		
+	- Update 'client\src\contexts\authContext.js'		
+		//Register
+		const registerUser = async userForm => {
+			try {
+
+				const response = await axios.post(`${API_URL}/auth/register`, userForm)
+
+				if (response.data.success)
+					localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
+
+				await loadUser()
+					
+				return response.data
+
+			} catch (error) {
+				if (error.response.data)
+					return error.response.data
+				else
+					return { success: false, message: error.message }
+			}
+		}
+
+		//Context data
+		const authContextData = {loginUser, registerUser, authState}
+		
+- Tạo một Navigation bar / About page và chức năng Logout
+	- Tạo file 'client\src\components\layouts\NavbarMenu.js'
+		[Xem code....]
+		
+	- Update 'client\src\components\routing\PrivateRoute.js'
+		import NavbarMenu from '../layouts/NavbarMenu'
+		...
+		<NavbarMenu/>
+		...
+		
+	- Tạo 'client\src\views\AboutView.js'
+		import React, {useContext} from 'react'
+		import {Link} from 'react-router-dom'
+		import {Nav, Button, Navbar} from 'react-bootstrap'
+		import learnItLogo from '../../assets/logo.svg'
+		import logoutIcon from '../../assets/logout.svg'
+		import { authContext } from '../../contexts/authContext'
+
+		const NavBarMenu = () => {
+
+			const {
+				authState: {
+					user: {username}
+				},
+				logoutUser
+			} = useContext(authContext)
+
+			const handleLogout = () => logoutUser()
+
+			return (
+				...
+			)
+		}
+
+		export default NavBarMenu
+		
+	- Update 'client\src\App.js'
+		import AboutView from './views/AboutView';
+		...
+		<Route path="/about" element={<PrivateRoute element={AboutView} />} />
+		...
+		
+	- Update 'client\src\constants\authConstants.js'
+		export const SET_AUTH = 'SET_AUTH'
+		
+	- Update 'client\src\reducer\authReducer.js'
+		import {SET_AUTH} from '../constants/authConstants'
+		...
+		switch(type) {
+			case SET_AUTH:
+		...
+	
+	- Update 'client\src\contexts\authContext.js'
+		import {..., SET_AUTH} from '../constants/authConstants'
+		...
+		//Logout
+		const logoutUser = () => {
+			localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+			
+			dispath({
+				type: SET_AUTH, 
+				payload: {isAuthenticated: false, user: null}
+			})
+		}
+		...
+		const authContextData = {..., logoutUser, ...}

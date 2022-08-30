@@ -5,6 +5,7 @@ import AuthView from './views/AuthView'
 import DashboardView from './views/DashboardView'
 import AuthContextProvider from './contexts/authContext'
 import PrivateRoute from './components/routing/PrivateRoute';
+import AboutView from './views/AboutView';
 
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
             element={<AuthView authRoute='register'  />}
             exact />
 
-          <Route path="/dashboard" element={<PrivateRoute element={DashboardView} />} /> {/* <Route path='/dashboard' element={<DashboardView />} /> */}
+          <Route path="/dashboard" element={<PrivateRoute element={DashboardView} />} />
+          <Route path="/about" element={<PrivateRoute element={AboutView} />} />
 
         </Routes>
       </Router>
