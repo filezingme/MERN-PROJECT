@@ -2,7 +2,7 @@ import {useContext} from 'react'
 import { Navigate } from 'react-router-dom'
 import { authContext } from '../../contexts/authContext'
 import { Spinner } from 'react-bootstrap'
-import NavbarMenu from '../layouts/NavbarMenu'
+import NavbarLayout from '../layouts/NavbarLayout'
 
 const PrivateRoute = ({element: Element}) => {
 
@@ -19,7 +19,7 @@ const PrivateRoute = ({element: Element}) => {
 
     return isAuthenticated ? 
         (<>
-            <NavbarMenu/>
+            <NavbarLayout/>
             <Element />
         </>) 
         : 

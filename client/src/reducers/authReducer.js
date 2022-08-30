@@ -1,4 +1,4 @@
-import {SET_AUTH} from '../constants/authConstants'
+import {SET_AUTH} from '../constants/authConstant'
 
 export const authReducer = (state, action) => {
     const {type, payload: {isAuthenticated, user}} = action

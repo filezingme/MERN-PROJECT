@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const verifyToken = require('../middleware/auth')
+const verifyToken = require('../middlewares/authMiddleware')
 
-const Post = require('../models/Post')
+const Post = require('../models/postModel')
 
 
 //@route GET api/posts

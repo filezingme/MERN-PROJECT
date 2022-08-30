@@ -228,7 +228,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		.....
 
 * Tạo DB Models
-	- Tạo file 'server\models\User.js'
+	- Tạo file 'server\models\userModel.js'
 		const mongoose = require('mongoose')
 		const Schema = mongoose.Schema
 
@@ -250,7 +250,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 
 		module.exports = mongoose.model('users', UserSchema)
 		
-	- Tạo file 'server\models\Post.js'
+	- Tạo file 'server\models\postModel.js'
 		const mongoose = require('mongoose')
 		const Schema = mongoose.Schema
 
@@ -278,11 +278,11 @@ Ref react:https://www.w3schools.com/react/default.asp
 		module.exports = mongoose.model('posts', PostSchema)
 		
 * Tạo Router Auth:
-	- Tạo file 'server\routes\auth.js'
+	- Tạo file 'server\routes\authRoute.js'
 		const express = require('express')
 		const router = express.Router()
 
-		const User = require('../models/User')
+		const User = require('../models/userModel')
 
 		router.get('/', (req, res) => {res.send('USER ROUTE')})
 
@@ -290,9 +290,9 @@ Ref react:https://www.w3schools.com/react/default.asp
 		
 	- Update 'server\index.js'
 		...
-		const authRouter = require('./routes/auth')
+		const authRoute = require('./routes/authRoute')
 		...
-		app.use('/api/auth', authRouter)
+		app.use('/api/auth', authRoute)
 		...
 	
 	- Update 'server\request.http'
@@ -314,13 +314,13 @@ Ref react:https://www.w3schools.com/react/default.asp
 		app.use(express.json())
 		...
 			
-	- Update 'server\routes\auth.js'
+	- Update 'server\routes\authRoute.js'
 		const express = require('express')
 		const router = express.Router()
 		const argon2 = require('argon2')
 		const jwt = require('jsonwebtoken')
 
-		const User = require('../models/User')
+		const User = require('../models/userModel')
 
 		//@route POST api/auth/register
 		//@desc Register user
@@ -432,11 +432,11 @@ Ref react:https://www.w3schools.com/react/default.asp
 			}
 			
 * Create a Post > [POST] api:
-	- Add 'server\routes\post.js'
+	- Add 'server\routes\postRoute.js'
 		const express = require('express')
 		const router = express.Router()
 
-		const Post = require('../models/Post')
+		const Post = require('../models/postModel')
 
 		//@route POST api/posts
 		//@desc Create post
@@ -471,9 +471,9 @@ Ref react:https://www.w3schools.com/react/default.asp
 		
 	- Update 'server\index.js'
 		...
-		const postRouter = require('./routes/post')
+		const postRoute = require('./routes/postRoute')
 		...
-		app.use('/api/posts', postRouter)
+		app.use('/api/posts', postRoute)
 		...
 	
 	- Update 'server\request.http'
@@ -488,7 +488,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 				"status": "LEARNING"
 			}
 			
-	- Tạo 'server\middleware\auth.js'
+	- Tạo 'server\middlewares\authMiddleware.js'
 		> Thằng này đứng giữa kiểm tra có accessToken trong header hay không, nếu hàng xịn nó tiếp tục cho qua để đi vào router.post(...) của file 'server\routes\post.js'
 		
 			const jwt = require('jsonwebtoken')
@@ -518,7 +518,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 			
 	- Update 'server\routes\post.js'
 		...
-		const verifyToken = require('../middleware/auth')
+		const verifyToken = require('../middlewares/authMiddleware')
 		...
 		router.post('/', verifyToken, async (req, res) => {
 		...
@@ -857,19 +857,19 @@ Ref react:https://www.w3schools.com/react/default.asp
 	
 	- Connect Service/API & handle Login:
 		- Tạo folders và files:
-			'client\src\constants\commonContants.js'
+			'client\src\constants\commonContant.js'
 				export const API_URL = process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/api' : 'production-api-url'
 
-			'client\src\constants\authConstants.js'
+			'client\src\constants\authConstant.js'
 				export const LOCAL_STORAGE_TOKEN_NAME = 'learnit-mern'
 				
 			'client\src\contexts\authContext.js'
 				> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
 				
 					import {createContext, useReducer} from 'react'
-					import {authReducer} from '../reducer/authReducer'
-					import {API_URL} from '../constants/commonContants'
-					import {LOCAL_STORAGE_TOKEN_NAME} from '../constants/authConstants'
+					import {authReducer} from '../reducers/authReducer'
+					import {API_URL} from '../constants/commonContant'
+					import {LOCAL_STORAGE_TOKEN_NAME} from '../constants/authConstant'
 					import axios from 'axios'
 
 
@@ -915,7 +915,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 
 					export default AuthContextProvider
 				
-			'client\src\reducer\authReducer.js'
+			'client\src\reducers\authReducer.js'
 				...
 			
 		- Update 'client\src\App.js'
@@ -1005,7 +1005,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 - Logged-in redirects tới trang /dashboard và không cho truy cập các trang Login/Register:
 	- Update 'server\routes\auth.js'
 		...
-		const verifyToken = require('../middleware/auth')
+		const verifyToken = require('../middlewares/authMiddleware')
 		...
 		//@route GET api/auth
 		//@desc Check if user is logged in
@@ -1060,7 +1060,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		}
 				
 		
-	- Update 'client\src\reducer\authReducer.js'
+	- Update 'client\src\reducers\authReducer.js'
 		export const authReducer = (state, action) => {
 		const {type, payload: {isAuthenticated, user}} = action
 
@@ -1156,19 +1156,19 @@ Ref react:https://www.w3schools.com/react/default.asp
 		}
 	
 - Hiển thị Alert khi login fails
-	- Tạo file 'client\src\components\layouts\AlertMessage.js'
+	- Tạo file 'client\src\components\layouts\AlertLayout.js'
 		> rafce+tab:
 			import React from 'react'
 			import { Alert } from 'react-bootstrap';
-			import AlertMessage from '../layouts/AlertMessage'
+			import AlertLayout from '../layouts/AlertLayout'
 
-			const AlertMessage = ({info}) => {
+			const AlertLayout = ({info}) => {
 			  return info && (
 				<Alert variant={info.type}>{info.message}</Alert>
 			  )
 			}
 
-			export default AlertMessage
+			export default AlertLayout
 	
 	- Update 'client\src\components\auth\LoginForm.js'
 		...
@@ -1178,7 +1178,7 @@ Ref react:https://www.w3schools.com/react/default.asp
         //show alert for a few second and then hide it
         setTimeout(() => setAlert(null), 3000)
 		...
-		<AlertMessage info={alert} />
+		<AlertLayout info={alert} />
 		...
 		
 		
@@ -1186,7 +1186,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 	- Update 'client\src\components\auth\RegisterForm.js'
 		import { useState, useContext } from 'react'
 		import { authContext } from '../../contexts/authContext'
-		import AlertMessage from '../layouts/AlertMessage'
+		import AlertLayout from '../layouts/AlertLayout'
 		...
 		[Xem code...]
 		
@@ -1216,13 +1216,13 @@ Ref react:https://www.w3schools.com/react/default.asp
 		const authContextData = {loginUser, registerUser, authState}
 		
 - Tạo một Navigation bar / About page và chức năng Logout
-	- Tạo file 'client\src\components\layouts\NavbarMenu.js'
+	- Tạo file 'client\src\components\layouts\NavbarLayout.js'
 		[Xem code....]
 		
 	- Update 'client\src\components\routing\PrivateRoute.js'
-		import NavbarMenu from '../layouts/NavbarMenu'
+		import NavbarLayout from '../layouts/NavbarLayout'
 		...
-		<NavbarMenu/>
+		<NavbarLayout/>
 		...
 		
 	- Tạo 'client\src\views\AboutView.js'
@@ -1233,7 +1233,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		import logoutIcon from '../../assets/logout.svg'
 		import { authContext } from '../../contexts/authContext'
 
-		const NavBarMenu = () => {
+		const NavbarLayout = () => {
 
 			const {
 				authState: {
@@ -1249,7 +1249,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 			)
 		}
 
-		export default NavBarMenu
+		export default NavbarLayout
 		
 	- Update 'client\src\App.js'
 		import AboutView from './views/AboutView';
@@ -1257,18 +1257,18 @@ Ref react:https://www.w3schools.com/react/default.asp
 		<Route path="/about" element={<PrivateRoute element={AboutView} />} />
 		...
 		
-	- Update 'client\src\constants\authConstants.js'
+	- Update 'client\src\constants\authConstant.js'
 		export const SET_AUTH = 'SET_AUTH'
 		
-	- Update 'client\src\reducer\authReducer.js'
-		import {SET_AUTH} from '../constants/authConstants'
+	- Update 'client\src\reducers\authReducer.js'
+		import {SET_AUTH} from '../constants/authConstant'
 		...
 		switch(type) {
 			case SET_AUTH:
 		...
 	
 	- Update 'client\src\contexts\authContext.js'
-		import {..., SET_AUTH} from '../constants/authConstants'
+		import {..., SET_AUTH} from '../constants/authConstant'
 		...
 		//Logout
 		const logoutUser = () => {
@@ -1281,3 +1281,101 @@ Ref react:https://www.w3schools.com/react/default.asp
 		}
 		...
 		const authContextData = {..., logoutUser, ...}
+		
+		
+- Build trang Dashboard
+	- Tạo 'client\src\constants\postConstant.js'
+		export const POSTS_LOADED_SUCCESS = 'POSTS_LOADED_SUCCESS'
+		export const POSTS_LOADED_FAIL = 'POSTS_LOADED_FAIL'
+		
+	- Tạo 'client\src\reducers\postReducer.js'
+		import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS } from "../constants/postConstant"
+
+		export const postReducer = (state, action) => {
+			const {type, payload} = action
+
+			switch(type)
+			{
+				case POSTS_LOADED_SUCCESS:
+					return {
+						...state,
+						posts: payload,
+						postsLoading: false
+					}
+
+				case POSTS_LOADED_FAIL:
+					return {
+						...state,
+						posts: [],
+						postsLoading: false
+					}
+
+				default:
+					return state
+			}
+		}
+		
+	- Tạo 'client\src\contexts\postContext.js'
+		import {createContext, useReducer} from 'react'
+		import {postReducer} from '../reducers/postReducer'
+		import { API_URL } from '../constants/commonContant'
+		import { POSTS_LOADED_SUCCESS } from '../constants/postConstant'
+		import axios from 'axios'
+
+		export const postContext = createContext()
+
+		const PostContextProvider = ({children}) => {
+
+			//State
+			const [postState, dispath] = useReducer(postReducer, {
+				posts: [],
+				postsLoading: true
+			})
+
+			//Get all posts
+			const getPosts = async() => {
+				try {
+					const response = await axios.get(`${API_URL}/posts`)
+					if (response.data.success) {
+						dispath({
+							type: POSTS_LOADED_SUCCESS, 
+							payload: response.data.posts
+						})
+					}
+				} catch (error) {
+					dispath({
+						type: POSTS_LOADED_FAIL
+					})
+				}
+			}
+
+			//Post context data
+			const postContextData = {postState, getPosts}
+
+			return (
+				<postContext.Provider value={postContextData}>
+					{children}
+				</postContext.Provider>
+			)
+		}
+
+		export default PostContextProvider
+	
+	- Update 'client\src\App.js'
+		import PostContextProvider from './contexts/postContext';
+		...
+		function App() {
+		  return (
+			...
+			  <PostContextProvider>
+				...
+			  </PostContextProvider>
+			...
+		  );
+		}
+	
+	- Update 'client\src\views\DashboardView.js'
+		[Many code ...]
+	
+https://youtu.be/rgFd17fyM4A?t=14617
+		

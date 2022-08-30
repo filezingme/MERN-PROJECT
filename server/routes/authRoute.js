@@ -3,8 +3,8 @@ const router = express.Router()
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 
-const User = require('../models/User')
-const verifyToken = require('../middleware/auth')
+const User = require('../models/userModel')
+const verifyToken = require('../middlewares/authMiddleware')
 
 //@route GET api/auth
 //@desc Check if user is logged in

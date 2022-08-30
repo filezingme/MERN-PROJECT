@@ -4,7 +4,7 @@ import { Button, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useContext } from 'react'
 import { authContext } from '../../contexts/authContext'
-import AlertMessage from '../layouts/AlertMessage'
+import AlertLayout from '../layouts/AlertLayout'
 
 const LoginForm = () => {
 
@@ -50,7 +50,7 @@ const LoginForm = () => {
   return (<>
     <Form className='my-4' onSubmit={handleLogin}>
 
-      <AlertMessage info={alert} />
+      <AlertLayout info={alert} />
 
       <Form.Group>
         <Form.Control type='text' placeholder='Username' name='username' className='my-3' required value={username} onChange={onChangeLoginForm} />

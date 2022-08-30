@@ -3,8 +3,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
-const authRouter = require('./routes/auth')
-const postRouter = require('./routes/post')
+const authRoute = require('./routes/authRoute')
+const postRoute = require('./routes/postRoute')
 
 const connectDB = async() => {
     try {
@@ -36,8 +36,8 @@ app.use(cors())
 
 //app.get('/', (req, res) => res.send('Hello world'))
 
-app.use('/api/auth', authRouter)
-app.use('/api/posts', postRouter)
+app.use('/api/auth', authRoute)
+app.use('/api/posts', postRoute)
 
 const PORT = 5000
 

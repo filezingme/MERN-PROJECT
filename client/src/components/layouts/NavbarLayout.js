@@ -5,7 +5,7 @@ import learnItLogo from '../../assets/logo.svg'
 import logoutIcon from '../../assets/logout.svg'
 import { authContext } from '../../contexts/authContext'
 
-const NavBarMenu = () => {
+const NavbarLayout = () => {
 
     const {
         authState: {
@@ -53,4 +53,4 @@ const NavBarMenu = () => {
     )
 }
 
-export default NavBarMenu
+export default NavbarLayout

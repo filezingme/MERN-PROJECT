@@ -1,7 +1,7 @@
 import {createContext, useReducer, useEffect} from 'react'
-import {authReducer} from '../reducer/authReducer'
-import {API_URL} from '../constants/commonContants'
-import {LOCAL_STORAGE_TOKEN_NAME, SET_AUTH} from '../constants/authConstants'
+import {authReducer} from '../reducers/authReducer'
+import {API_URL} from '../constants/commonContant'
+import {LOCAL_STORAGE_TOKEN_NAME, SET_AUTH} from '../constants/authConstant'
 import axios from 'axios'
 import setAuthTokenUtil from '../utils/setAuthTokenUtil'
 

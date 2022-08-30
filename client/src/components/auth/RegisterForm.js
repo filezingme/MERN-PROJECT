@@ -2,7 +2,7 @@ import { Button, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useState, useContext } from 'react'
 import { authContext } from '../../contexts/authContext'
-import AlertMessage from '../layouts/AlertMessage'
+import AlertLayout from '../layouts/AlertLayout'
 
 const RegisterForm = () => {
 
@@ -49,7 +49,7 @@ const RegisterForm = () => {
     return (<>
         <Form className='my-4' onSubmit={handleRegister}>
 
-            <AlertMessage info={alert} />
+            <AlertLayout info={alert} />
 
             <Form.Group>
             <Form.Control type='text' placeholder='Username' name='username' className='my-3' required value={username} onChange={onChangeRegisterForm} />
