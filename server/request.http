@@ -12,7 +12,7 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "tai2",
+    "username": "tai",
     "password": "123"
 }
 
@@ -20,19 +20,19 @@ Content-Type: application/json
 
 POST http://localhost:5000/api/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzBjODQ5Y2I5MGZjNmVhZTUwNzQ5ZWQiLCJpYXQiOjE2NjE4MzMwOTJ9.TlcL5l6wmuAHKx64fMNgvxobIvVSuO7ugq6gIGzBu08
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjI1NDEwMzd9.lDma6QF5NCuLk4fLQ7kwuGzv7Me_vlcMrDyup6rlL6U
 
 {
-    "title": "Python",
-    "description": "Py thon ma",
-    "url": "Python.com",
+    "title": "ASP.NET Blazor",
+    "description": "Dòng mô tả này dành cho asp.net blazor",
+    "url": "blazor.asp.net",
     "status": "TO LEARN"
 }
 
 ###
 
 GET http://localhost:5000/api/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjExMzI1MDV9.C4cDWas0oyYNukLokcI-cu8uXZl6aGxGc9vkFKm0lpw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjI1NDEwMzd9.lDma6QF5NCuLk4fLQ7kwuGzv7Me_vlcMrDyup6rlL6U
 
 ###
 

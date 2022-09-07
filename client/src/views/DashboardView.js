@@ -1,7 +1,8 @@
 import { postContext } from "../contexts/postContext"
 import { useContext, useEffect } from "react"
-import { Button, Card, Row, Spinner } from "react-bootstrap"
+import { Button, Card, Col, Row, Spinner } from "react-bootstrap"
 import { authContext } from "../contexts/authContext"
+import SinglePost from "../components/posts/SinglePost"
 
 const DashboardView = () => {
 
@@ -43,15 +44,20 @@ const DashboardView = () => {
     )
   }
   else {
-    <Row className="row-cols-1 row-cols-md-3 g-4 mx-">
-
-    </Row>
+    body = (
+      <Row className="row-cols-1 row-cols-md-3 g-4 mx-auto mt-3">
+        {posts.map(post => (
+          <Col key={post._id} className='my-2'>
+            <SinglePost post={post} />
+          </Col>
+        ))}
+      </Row>
+    )
   }
 
 
   return (<>
     {body}
-
   </>)
 }
 
