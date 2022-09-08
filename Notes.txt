@@ -1521,4 +1521,182 @@ Ref react:https://www.w3schools.com/react/default.asp
 		
 - Add Post Modal
 	- Tạo 'client\src\components\posts\AddPostModal.js'
+		import { Modal, Button, Form } from "react-bootstrap"
+
+		const AddPostModal = () => {
+		  return (
+			<Modal show={true}>
+				<Modal.Header closeButton>
+					<Modal.Title>What do you want to learn?</Modal.Title>
+				</Modal.Header>
+
+				<Form>
+					<Modal.Body>
+						<Form.Group>
+							<Form.Control type="text" placeholder="Title" name='title' required aria-describedby="title-help" />
+							<Form.Text id="title-help" muted>Required</Form.Text>
+						</Form.Group>
+						
+						<Form.Group>
+							<Form.Control as='textarea' rows={3} placeholder="Description" name='description' />
+						</Form.Group>
+						
+						<Form.Group>
+							<Form.Control type="text" placeholder="Youtube Tutorial URL" name='url' />
+						</Form.Group>
+					</Modal.Body>
+
+					<Modal.Footer>
+						<Button variant="secondary">Cancel</Button>
+						<Button variant="primary" type="submit">LearnIt!</Button>
+					</Modal.Footer>
+				</Form>
+			</Modal>
+		  )
+		}
+
+		export default AddPostModal
 		
+	- Update 'client\src\views\DashboardView.js'
+		import AddPostModal from "../components/posts/AddPostModal"
+		...
+		<AddPostModal/>
+		
+	- Update 'client\src\contexts\postContext.js'
+		import {..., useState} from 'react'
+		...
+		const [showAddPostModal, setShowAddPostModal] = useState(false)
+		...
+		const postContextData = {..., showAddPostModal, setShowAddPostModal}
+		
+	- Update 'client\src\views\DashboardView.js'
+		import addIcon from '../assets/plus-circle-fill.svg'
+		import { ..., OverlayTrigger, Tooltip } from "react-bootstrap"
+		...
+		<OverlayTrigger placement="left" overlay={<Tooltip>Add a new thing to learn</Tooltip>}>
+			<Button className="btn-floating" onClick={setShowAddPostModal.bind(this, true)}>
+			  <img src={addIcon} alt='add-post' width={60} height='60' />
+			</Button>
+		</OverlayTrigger>
+		
+	- Update 'client\src\components\posts\AddPostModal.js'
+		import { postContext } from "../../contexts/postContext"
+		import { useContext } from "react"
+		...
+		const { showAddPostModal, setShowAddPostModal } = useContext(postContext)
+		
+		const handleClose = () => {
+			setShowAddPostModal(false)
+		}
+
+		return (
+			<Modal show={showAddPostModal} onHide={handleClose}>
+			...
+			<Button variant="secondary" onClick={handleClose}>Cancel</Button>
+			
+- Xử lý thêm một Post
+	- Update 'client\src\constants\postConstant.js'
+		export const ADD_POST = 'ADD_POST'
+		
+	- Update 'client\src\reducers\postReducer.js'
+		import { ..., ADD_POST } from "../constants/postConstant"
+		...
+		case ADD_POST:
+            return {
+                ...state,
+                posts: [...state.posts, payload]
+            }
+		
+	- Update 'client\src\contexts\postContext.js'
+		import { ..., ADD_POST } from '../constants/postConstant'
+		...
+		const [showToast, setShowToast] = useState({
+			show: true,
+			message: '',
+			type: null
+		})
+		...
+		
+		//Add post
+		const addPost = async newPost => {
+			try {
+				const response = await axios.post(`${API_URL}/posts`, newPost)
+				
+				if(response.data.success) {
+					dispath({type: ADD_POST, payload: response.data.post})
+					return response.data
+				}
+
+			} catch (error) {
+				if (error.response.data)
+					return error.response.data
+				else
+					return { success: false, message: 'Server error' }
+			}
+		}
+
+		//Post context data
+		const postContextData = {..., addPost, showToast, setShowToast}
+
+	- Update 'client\src\components\posts\AddPostModal.js'
+		import { ..., useState } from "react"
+		...
+		//Context
+		const { ..., addPost, setShowToast } = useContext(postContext)
+	
+		const [newPost, setNewPost] = useState({ title: '', description: '', url: '', status: 'TO LEARN' })
+		
+		const {title, description, url} = newPost
+		
+		const onChangeNewPostForm = event => {
+			setNewPost({ ...newPost, [event.target.name]: event.target.value })
+		}
+		
+		const handleClose = () => {
+			resetAddPostData()
+		}
+		
+		const handleSubmit = async event => {
+			event.preventDefault()
+			const {success, message} = await addPost(newPost)
+			resetAddPostData()
+			setShowToast({show: true, message, type: success ? 'success' : 'danger'})
+		}
+
+		const resetAddPostData = () => {
+			setNewPost({ title: '', description: '', url: '', status: 'TO LEARN' })
+			setShowAddPostModal(false)
+		}
+		...
+		<Form onSubmit={handleSubmit}>
+		
+	- Update 'client\src\views\DashboardView.js'
+		import { Toast } from "react-bootstrap"
+		...
+		const {
+			...,
+			showToast: {show, message, type},
+			setShowToast
+		} = useContext(postContext)
+		...
+		
+		{/* After post is added, show toast */}
+		<Toast 
+		  show={show} 
+		  style={{position: 'fixed', top: '20%', right: '10px'}} 
+		  className={`bg-${type} text-white`}
+		  onClose={setShowToast.bind(this, {show: false, message: '', type: null})}
+		  delay={3000}
+		  autohide
+		>
+		  <Toast.Body>
+			<strong>{message}</strong>
+		  </Toast.Body>
+		</Toast>
+		
+- Xử lý Click nút LearnIt! để thêm Post khi User chưa có bất Post nào
+	- Update 'client\src\views\DashboardView.js'
+		<Button variant="primary" onClick={setShowAddPostModal.bind(this, true)}>LearnIt!</Button>
+		
+- Xử lý xóa Post
+	https://youtu.be/rgFd17fyM4A?t=18321
