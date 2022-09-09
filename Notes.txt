@@ -1969,8 +1969,8 @@ Ref react:https://www.w3schools.com/react/default.asp
 				
 					> mục đích tạo file không dùng, mà chỉ để commit lên github để gợi nhớ/tránh quên là phải có file 'server\.env'
 					
-			- Chạy các lệnh sau để commit lên cả git của github và heroku:
+			- Chạy các lệnh sau để commit lên cả git của github và git của heroku:
 				>>>git add .
-				>>>git commit -m "commit"	HOẶC:	git ci -m "commit"
+				>>>git commit -m "commit"	HOẶC:	git commit -am "commit"
 				>>>git push -u origin main
 				>>>git push heroku master
