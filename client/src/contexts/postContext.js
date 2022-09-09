@@ -1,7 +1,7 @@
 import {createContext, useReducer, useState} from 'react'
 import {postReducer} from '../reducers/postReducer'
 import { API_URL } from '../constants/commonContant'
-import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS, ADD_POST } from '../constants/postConstant'
+import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS, ADD_POST, DELETE_POST } from '../constants/postConstant'
 import axios from 'axios'
 
 export const postContext = createContext()
@@ -62,8 +62,32 @@ const PostContextProvider = ({children}) => {
     }
 
 
+    //Delete post
+    const deletePost = async postId => {
+        try {
+            const response = await axios.delete(`${API_URL}/posts/${postId}`)
+
+            if (response.data.success) {
+                dispath({type: DELETE_POST, payload: postId})
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     //Post context data
-    const postContextData = {postState, getPosts, showAddPostModal, setShowAddPostModal, addPost, showToast, setShowToast}
+    const postContextData = {
+        postState, 
+        getPosts, 
+        showAddPostModal, 
+        setShowAddPostModal, 
+        addPost, 
+        showToast, 
+        setShowToast, 
+        deletePost
+    }
 
 
     return (

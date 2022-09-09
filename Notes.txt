@@ -1699,4 +1699,43 @@ Ref react:https://www.w3schools.com/react/default.asp
 		<Button variant="primary" onClick={setShowAddPostModal.bind(this, true)}>LearnIt!</Button>
 		
 - Xử lý xóa Post
-	https://youtu.be/rgFd17fyM4A?t=18321
+	- Update 'client\src\constants\postConstant.js'
+		export const DELETE_POST = 'DELETE_POST'
+		
+	- Update 'client\src\reducers\postReducer.js'
+		import { ..., DELETE_POST } from "../constants/postConstant"
+		...
+        case DELETE_POST:
+            return {
+                ...state,
+                posts: state.posts.filter(post => post._id !== payload)
+            }
+	
+	- Update 'client\src\contexts\postContext.js'
+		import { ..., DELETE_POST } from '../constants/postConstant'
+		...
+		//Delete post
+		const deletePost = async postId => {
+			try {
+				const response = await axios.delete(`${API_URL}/posts/${postId}`)
+
+				if (response.data.success) {
+					dispath({type: DELETE_POST, payload: postId})
+				}
+
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		...
+		//Post context data
+		const postContextData = {
+			..., 
+			deletePost
+		}
+		
+	- Update 'client\src\components\posts\ActionButtons.js'
+		import { useContext } from "react"
+		import { postContext } from "../../contexts/postContext"
+		...
+		<Button className="post-button" onClick={deletePost.bind(this, _id)}>
