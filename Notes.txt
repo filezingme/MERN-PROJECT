@@ -1957,7 +1957,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 			- Cd ta thực mục cha (cha của thư mục Client và Server), kiểu như 'G:\Learning\Programming\MERN-PROJECT>', rồi chạy lệnh:
 				>>> heroku git:remote -a pacific-plains-99595
 					> lưu ý không cần chạy 'git init' vì đã thực hiện ở đầu của file notes.txt này (khi mà đẩy lên github)
-				>>> git st
+				>>> git status	HOẶC:	git st
 					> đây là lệnh git status để xem
 			- Nhớ bỏ .env trong file '.gitignore'
 				> file này lưu những thông tin bảo mật
@@ -1968,7 +1968,9 @@ Ref react:https://www.w3schools.com/react/default.asp
 				ACCESS_TOKEN_SECRET=yoursecret
 				
 					> mục đích tạo file không dùng, mà chỉ để commit lên github để gợi nhớ/tránh quên là phải có file 'server\.env'
-			- Chạy các lệnh sau:
+					
+			- Chạy các lệnh sau để commit lên cả git của github và heroku:
 				>>>git add .
 				>>>git commit -m "commit"	HOẶC:	git ci -m "commit"
 				>>>git push -u origin main
+				>>>git push heroku master
