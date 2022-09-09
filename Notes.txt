@@ -1923,3 +1923,52 @@ Ref react:https://www.w3schools.com/react/default.asp
 		...
 		{post && <UpdatePostModal/>}
 		
+- Deploy lên Heroku và Netlify
+	- Update 'server\index.js'
+		const PORT = process.env.PORT || 5000
+	
+	- Update 'server\package.json'
+		"scripts": {
+			"start": "node index",
+			...
+		  },
+		  
+	- Tạo 'server\Procfile'
+		web: npm run start
+		
+	- Login 'https://id.heroku.com/login'
+		truongductai.vn@gmail.com/fbi..A
+		
+	- Cài Heroku CLI 'https://devcenter.heroku.com/articles/heroku-cli'
+		- Download chỗ 'Windows 64-bit installer'
+		- Cài nó
+		- Cài xong, mở CMD gõ lần lượt lệnh theo các bước:
+			- Gõ 'heroku' nếu hiện thông tin version... thì là thành công		
+			- Gõ 'heroku login' để tự động mở trình duyệt để login
+				> Login bằng tài khoản ở trên
+			- Gõ 'heroku create'
+			- Mở 'https://dashboard.heroku.com/apps' sẽ nhìn thấy app được tạo tên mặc định là 'pacific-plains-99595'
+			- Click vào tên app 'pacific-plains-99595'
+			- Click vào tab 'Deploy', có link kiểu 'https://dashboard.heroku.com/apps/pacific-plains-99595/deploy/heroku-git'
+				> Kéo xuống dưới xem hướng dẫn gõ lệnh, kiểu như: (xem thôi, không chạy những lệnh này)
+					$ cd my-project/
+					$ git init
+					$ heroku git:remote -a pacific-plains-99595
+			- Cd ta thực mục cha (cha của thư mục Client và Server), kiểu như 'G:\Learning\Programming\MERN-PROJECT>', rồi chạy lệnh:
+				>>> heroku git:remote -a pacific-plains-99595
+					> lưu ý không cần chạy 'git init' vì đã thực hiện ở đầu của file notes.txt này (khi mà đẩy lên github)
+				>>> git st
+					> đây là lệnh git status để xem
+			- Nhớ bỏ .env trong file '.gitignore'
+				> file này lưu những thông tin bảo mật
+				
+			- Tạo 'server\.env.example'
+				DB_USERNAME=yourusername
+				DB_PASSWORD=yourpassword
+				ACCESS_TOKEN_SECRET=yoursecret
+				
+					> mục đích tạo file không dùng, mà chỉ để commit lên github để gợi nhớ/tránh quên là phải có file 'server\.env'
+			- Chạy các lệnh sau:
+				>>>git add .
+				>>>git commit -m "commit"	HOẶC:	git ci -m "commit"
+				>>>git push -u origin main
