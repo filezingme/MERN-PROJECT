@@ -1973,4 +1973,4 @@ Ref react:https://www.w3schools.com/react/default.asp
 				>>>git add .
 				>>>git commit -m "commit"	HOẶC:	git commit -am "commit"
 				>>>git push -u origin main
-				>>>git push heroku master
+				>>>git push heroku main
