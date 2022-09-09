@@ -5,6 +5,7 @@ import { authContext } from "../contexts/authContext"
 import SinglePost from "../components/posts/SinglePost"
 import AddPostModal from "../components/posts/AddPostModal"
 import addIcon from '../assets/plus-circle-fill.svg'
+import UpdatePostModal from "../components/posts/UpdatePostModal"
 
 const DashboardView = () => {
 
@@ -12,7 +13,7 @@ const DashboardView = () => {
   const {authState: {user: {username}}} = useContext(authContext)
 
   const {
-    postState: {posts, postsLoading},
+    postState: {post, posts, postsLoading},
     getPosts,
     setShowAddPostModal,
     showToast: {show, message, type},
@@ -73,6 +74,8 @@ const DashboardView = () => {
     {body}
 
     <AddPostModal/>
+
+    {post && <UpdatePostModal/>}
 
     {/* After post is added, show toast */}
     {message && (

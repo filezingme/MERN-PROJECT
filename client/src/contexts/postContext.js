@@ -1,7 +1,7 @@
 import {createContext, useReducer, useState} from 'react'
 import {postReducer} from '../reducers/postReducer'
 import { API_URL } from '../constants/commonContant'
-import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS, ADD_POST, DELETE_POST } from '../constants/postConstant'
+import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS, ADD_POST, DELETE_POST, UPDATE_POST, FIND_POST } from '../constants/postConstant'
 import axios from 'axios'
 
 export const postContext = createContext()
@@ -10,12 +10,16 @@ const PostContextProvider = ({children}) => {
 
     //State
     const [postState, dispath] = useReducer(postReducer, {
+        post: null,
         posts: [],
         postsLoading: true
     })
 
 
     const [showAddPostModal, setShowAddPostModal] = useState(false)
+
+    const [showUpdatePostModal, setShowUpdatePostModal] = useState(false)
+
     const [showToast, setShowToast] = useState({
         show: true,
         message: '',
@@ -77,16 +81,46 @@ const PostContextProvider = ({children}) => {
     }
 
 
+    //Find post when user is updating post
+    const findPost = postId => {
+        const post = postState.posts.find(post => post._id === postId)
+        dispath({type: FIND_POST, payload: post})
+    }
+
+
+    //Update post
+    const updatePost = async updatedPost => {
+        try {
+            const response = await axios.put(`${API_URL}/posts/${updatedPost._id}`, updatedPost)
+
+            if (response.data.success) {
+                dispath({type: UPDATE_POST, payload: response.data.post})
+                return response.data
+            }
+
+        } catch (error) {
+            if (error.response.data)
+                return error.response.data
+            else
+                return { success: false, message: 'Server error' }
+        }
+    }
+
+
     //Post context data
     const postContextData = {
         postState, 
         getPosts, 
         showAddPostModal, 
         setShowAddPostModal, 
+        showUpdatePostModal, 
+        setShowUpdatePostModal,
         addPost, 
         showToast, 
         setShowToast, 
-        deletePost
+        deletePost,
+        findPost,
+        updatePost
     }
 
 

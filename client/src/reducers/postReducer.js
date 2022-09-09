@@ -1,4 +1,4 @@
-import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS, ADD_POST, DELETE_POST } from "../constants/postConstant"
+import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS, ADD_POST, DELETE_POST, UPDATE_POST, FIND_POST } from "../constants/postConstant"
 
 export const postReducer = (state, action) => {
     const {type, payload} = action
@@ -29,6 +29,23 @@ export const postReducer = (state, action) => {
             return {
                 ...state,
                 posts: state.posts.filter(post => post._id !== payload)
+            }
+
+        case FIND_POST:
+            return {
+                ...state,
+                post: payload
+            }
+
+        case UPDATE_POST:
+
+            const newPost = state.posts.map(post => 
+                post._id === payload._id ? payload : post
+            )
+
+            return {
+                ...state,
+                posts: newPost
             }
 
         default:

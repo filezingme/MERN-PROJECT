@@ -28,7 +28,7 @@ const AddPostModal = () => {
     const handleSubmit = async event => {
         event.preventDefault()
         const {success, message} = await addPost(newPost)
-        setNewPost({ title: '', description: '', url: '', status: 'TO LEARN' })
+        
         resetAddPostData()
         setShowToast({show: true, message, type: success ? 'success' : 'danger'})
     }
