@@ -1971,6 +1971,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 					
 			- Chạy các lệnh sau để commit lên cả git của github và git của heroku:
 				>>>git add .
+				>>>git status
 				>>>git commit -m "commit"	HOẶC:	git commit -am "commit"
 				>>>git push -u origin main
 				>>>git push heroku main
