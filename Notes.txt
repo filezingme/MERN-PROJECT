@@ -1,0 +1,2018 @@
+Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
+
+Ref react:https://www.w3schools.com/react/default.asp
+
+--------------------------------------------------------------------------
+* Cài đặt môi trường:
+	- Cài NodeJS 'https://nodejs.org/en/download/'
+	- Cài Git 'https://git-scm.com/download/win'	
+	
+--------------------------------------------------------------------------
+* React Những thay đổi từ V5 tới V6:
+	> ref: 	https://viblo.asia/p/react-router-v6-gGJ59oVpZX2
+	
+* React nếu 'npm start' gặp lỗi:
+	'react-scripts is not recognized as an internal or external command, operable program or batch file.'
+		> It is an error about react-scripts file missing in your node_modules/ directory at the time of installation.
+			Check your react-script dependency is avaliable or not in package.json.
+			If not available then add it manually via:
+			>>> npm install react-scripts --save
+			
+* Server node nếu gặp lỗi:
+	'[nodemon] app crashed - waiting for file changes before starting...'
+		> ref: https://stackoverflow.com/questions/37486631/nodemon-app-crashed-waiting-for-file-changes-before-starting
+		1. Go to the task manager
+		2. Then look for Node.js: Server-side JavaScript
+		3. Then right click on it and End task from the processes. 
+		
+		hoặc:
+		> https://stackoverflow.com/questions/37486631/nodemon-app-crashed-waiting-for-file-changes-before-starting
+			Sometimes it happenes when you forget to source your '.env' files
+			
+* Server nếu gặp lỗi:
+	'MongoServerError: user is not allowed to do action [find] on [test.users]'
+		> ref: https://stackoverflow.com/questions/46649390/mongoerror-user-is-not-allowed-to-do-action
+		- Go to Atlas website: https://cloud.mongodb.com/v2/6301324f5b7806501fd7ff37#security/database/users
+			> Database Access > Database Users > Edit(your user) > Built-in Role >> change to Atlas admin
+
+	
+--------------------------------------------------------------------------	
+* Một ví dụ để hiểu luồng chạy useReducer() hook
+	//useReducer()
+	1. Init state: 0
+	2. Actions: Up (state + 1) / Down (state - 1)
+	3. Reducer
+	4. Dispatch
+	
+	//Init state
+	const initState = 0
+	
+	//Actions
+	const UP_ACTION = 'up'
+	const DOWN_ACTION = 'down'
+	
+	//Reducer
+	const reducer = (state, action) => {
+		console.log(reducer running...)
+		switch(action) {
+			case UP_ACTION:
+				return state + 1
+			case DOWN_ACTION:
+				return state - 1
+			default:
+				throw new Error('Invalid action')
+		}
+	}
+	
+	function App() {
+		const [count, dispatch] = useReducer(reducer, initState)
+		
+		return (
+			<div>
+				<h1>{count}</h1>
+				<button onClick={() => dispatch(DOWN_ACTION)}>Down</button>
+				<button onClick={() => dispatch(UP_ACTION)}>Up</button>
+			</div>
+		)
+	}
+	/*
+		Giải thích:
+		  - Đầu tiên khởi tạo initState và Actions
+		  - Tạo một hàm reducer với 2 tham số đầu vào là state và action
+		  - Gọi useReducer
+		  	const [count, dispatch] = useReducer(reducer, initState)
+		  		> giống như useState nên count = initState (giá trị khởi tạo ban đầu)
+		  		> thay vì như useState dùng setCount thì useReducer dùng dispatch
+		  		> useReducer sử dụng 2 tham số: 
+		  			- tham số đầu là một reducer
+		  			- tham số 2 là initState (giá trị khởi tạo ban đầu)
+		  > Những lưu ý: 
+		  	- Kiểu giá trị trả về của hàm reducer phải cùng kiểu với initState (giá trị khởi tạo ban đầu)
+		  	- Khi chưa sự kiện onClick chưa xảy ra thì "const [count, dispatch] = useReducer(reducer, initState)" vẫn chạy qua và count được gán = initState nhưng hàm 'reducer' chưa hề được chạy vào
+		  	- Khi onClick xảy ra nó sẽ chạy vào trong hàm reducer tìm action tương ứng đối số truyền vào và tính toán trả về state mới (cùng kiểu dữ liệu với initState)
+		  		> Lưu ý là reducer trả về state mới
+		  	- reducer trả về state mới thì render sẽ được refresh giống như trường hợp useState thôi
+		  > Trên là trường hợp dispatch truyền vào mỗi 1 tham số là Action name. 
+		    Trong trường hợp sử dụng thực tết phức tạp hơn là tham số truyền vào cho dispatch là một object bao gồm 2 key là tên action và payload để chứa data
+			
+		> Refs:
+			> Todo App with useReducer() hook
+				https://www.youtube.com/watch?v=yn-8PVKBBn0
+			> useReducer() hook
+				https://www.youtube.com/watch?v=p54lj4vM_LA
+	*/
+
+--------------------------------------------------------------------------
+* Bắt đầu Back-end:
+	- Tạo git repo 'https://github.com/filezingme/MERN-PROJECT.git'
+		> filezingme/fbiA
+		
+		…or create a new repository on the command line
+		echo "# MERN-PROJECT" >> README.md
+		git init
+		git add README.md
+		git add .
+		git status
+		git commit -m "first commit"
+		
+		git config --global user.email "filezingme@gmail.com"
+		git config --global user.name "taitd"
+		
+		git branch -M main
+		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+		git push -u origin main
+		
+		- Pull code from Git repo tới New Folder trên máy mới:
+		git init
+		git branch -M main
+		git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+		git pull origin main
+		
+	- Tạo thư mục chứa project '\HenryWebDev-Project'
+		>>> git init
+			
+	- Tạo thư mục 'server':
+		>>> mkdir server
+		>>> cd server
+		>>> npm init
+			> Tạo backend cho thư mục server
+			> Nó hỏi > cứ OK/Yes hết:
+				package name: (server)
+				version: (1.0.0)
+				description:
+				entry point: (index.js)
+				test command:
+		>>> npm i express jsonwebtoken mongoose dotenv argon2 cors
+			> Cài đặt những thứ cần thiết trong dự án
+				- express: server express của chúng ta
+				- jsonwebtoken: Xác thực người dùng, quản lý login/logout/authentication 
+				- mongoose: Object modal để nói chuyện giữa server với db
+				- dotenv: lấy biến môi trường
+				- argon2: tạo Hash-Password cho người dùng
+				- cors: cho phép frontend nói chuyện backend
+		>>> npm i --save-dev nodemon
+			> Tự động khởi động lại server khi nhìn thấy code thay đổi, nếu ko có nodemon thì cứ phải tắt đi và khởi động lại server rất mất tgian
+			
+			- Update 'server\package.json'
+				- Thêm code sau trong key "scripts":
+					"server": "nodemon index"
+						> Đồng nghĩa với việc mỗi khi chạy 'npm run server' nó sẽ chạy file 'index' trong thư mục 'server'
+	- Tạo 'server\index.js'		
+		> Thiết lập server express		
+			const express = require('express')
+			const app = express()
+			app.get('/', (req, res) => res.send('Hello world'))
+			const PORT = 5000
+			app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+			
+	>>> npm run server
+		- Truy cập 'http://localhost:5000/'
+			> Hiện kết quả in ra 'Hello world'
+			
+* Install trình giả lập 'REST Client'
+	> Tạo request luôn trong VSCODE cho tiện, đỡ phải dùng POSTMAN
+	
+	- Install 'REST Client' trong vscode 
+		- Search 'REST Client' hoặc ID 'humao.rest-client'
+						
+	- Tạo file 'server\request.http' với content:
+		GET http://localhost:5000/
+			> Nhấn 'Send Request' sẽ hiện cửa sổ Response bên phải với dòng 'Hello world'
+			
+* Cài đặt MongoDB & Connect DB:
+	- Truy cập 'https://www.mongodb.com/cloud'
+		> Chọn đăng nhập với tài khoản filezingme@gmail.com/bk..a
+		
+		- Đăng nhập thành công thì trở lại trang chủ 'https://cloud.mongodb.com/'
+			> Chọn 'New Project'
+				- Project name: 'mern-henrywebdev'
+				- Add Members and Set Permissions: trống
+				- Click 'Create Project'
+					- Click 'Build a Database'
+					- Chọn free
+						- Chọn AWS
+						- Cloud Provider & Region: 'Sydney (ap-southeast-2)'
+						- Cluster Name: 'mern-henrywebdev'
+						> Click 'Create Cluster'
+					- Tạo xong Cluster trên thì vào 'https://cloud.mongodb.com/v2/6301324f5b7806501fd7ff37#clusters'
+						> Click 'Connect'
+							- Add a connection IP address: 'Allow Access from Anywhere'
+							- Create a database user: sa/bangkieu
+							- Click 'Create Database User'
+						> Click 'Choose a connection method'
+							- Chọn 'Connect your application'
+							- Copy connection string:
+								mongodb+srv://sa:<password>@mern-henrywebdev.vggcelm.mongodb.net/?retryWrites=true&w=majority
+	- Update 'server\index.js'
+		> Nếu có lỗi kiểu như 'MongoParseError: options useCreateIndex, useFindAndModify are not supported' thì tham khảo:
+			'https://stackoverflow.com/questions/68958221/mongoparseerror-options-usecreateindex-usefindandmodify-are-not-supported'
+			
+		const express = require('express')
+		const mongoose = require('mongoose')
+		const connectDB = async() => {
+			try {
+				await mongoose.connect(`mongodb+srv://sa:bangkieu@mern-henrywebdev.vggcelm.mongodb.net/?retryWrites=true&w=majority`, {
+					//useCreateIndex: true,
+					useNewUrlParser: true,
+					useUnifiedTopology: true,
+					//useFindAndModify: false
+				})
+
+				console.log('MongoDB connected')
+			} catch (error) {
+				console.log(error.message)
+				process.exit(1)
+			}
+		}
+		connectDB()
+		.....
+
+* Tạo DB Models
+	- Tạo file 'server\models\userModel.js'
+		const mongoose = require('mongoose')
+		const Schema = mongoose.Schema
+
+		const UserSchema = new Schema({
+			username: {
+				type: String,
+				require: true,
+				unique: true
+			},    
+			password: {
+				type: String,
+				require: true
+			},
+			createdAt: {
+				type: Date,
+				default: Date.now
+			}
+		})
+
+		module.exports = mongoose.model('users', UserSchema)
+		
+	- Tạo file 'server\models\postModel.js'
+		const mongoose = require('mongoose')
+		const Schema = mongoose.Schema
+
+		const PostSchema = new Schema({
+			title: {
+				type: String,
+				require: true
+			},    
+			description: {
+				type: String
+			},
+			url: {
+				type: String
+			},
+			status: {
+				type: String,
+				enum: ['TO LEARN','LEARNING','LEANRED']
+			},
+			user: {
+				type: Schema.Types.ObjectId,
+				ref: 'users'
+			}
+		})
+
+		module.exports = mongoose.model('posts', PostSchema)
+		
+* Tạo Router Auth:
+	- Tạo file 'server\routes\authRoute.js'
+		const express = require('express')
+		const router = express.Router()
+
+		const User = require('../models/userModel')
+
+		router.get('/', (req, res) => {res.send('USER ROUTE')})
+
+		module.exports = router
+		
+	- Update 'server\index.js'
+		...
+		const authRoute = require('./routes/authRoute')
+		...
+		app.use('/api/auth', authRoute)
+		...
+	
+	- Update 'server\request.http'
+		GET http://localhost:5000/api/auth
+			> Nhấn 'Send Request' sẽ response 'USER ROUTE'
+			
+* Register api:
+	- Tạo file 'server\.env'
+		> file cấu hình các biến để bảo mật
+			DB_USERNAME=sa
+			DB_PASSWORD=bk
+			ACCESS_TOKEN_SECRET=fhsaiofyw9euhfgslafls
+			
+	- Update 'server\index.js'
+		require('dotenv').config()
+		...
+		await mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@mern-henrywebdev.vggcelm.mongodb.net/?retryWrites=true&w=majority`, {
+		...
+		app.use(express.json())
+		...
+			
+	- Update 'server\routes\authRoute.js'
+		const express = require('express')
+		const router = express.Router()
+		const argon2 = require('argon2')
+		const jwt = require('jsonwebtoken')
+
+		const User = require('../models/userModel')
+
+		//@route POST api/auth/register
+		//@desc Register user
+		//@access Public
+		router.post('/register', async (req, res) => {
+			const { username, password } = req.body
+
+			//Simple validation
+			if (!username || !password)
+				return res.status(400).json({ success: false, message: 'Missing username and/or password' })
+
+			try {
+				//Check for existing user
+				const user = await User.findOne({ username })
+
+				if (user) 
+					return res.status(400).json({ success: false, message: 'Username already taken' })
+
+				//All good
+				const hashedPassword = await argon2.hash(password)
+				const newUser = new User({username, password: hashedPassword})
+				await newUser.save()
+
+				//Return token
+				const accessToken = jwt.sign(
+					{userId: newUser._id}, 
+					process.env.ACCESS_TOKEN_SECRET
+				)
+
+				res.json({success: true, message: 'User created successfully', accessToken})
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({ success: false, message: 'Internal server error' })
+			}
+		})
+
+		module.exports = router
+	
+	- Update 'server\request.http'
+		POST http://localhost:5000/api/auth/register
+		POST http://localhost:5000/api/auth/register
+		Content-Type: application/json
+
+		{
+			"username": "tai 1",
+			"password": "123"
+		}
+			
+			> Nhấn 'Send Request' sẽ response:
+				{
+					"success": true,
+					"message": "User created successfully",
+					"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTQzMzQyOGM5YTEwYjUxYmZmNWYiLCJpYXQiOjE2NjEwMzE0NzV9.pvl7qO9MasqDSELstDHXrakhpAjOz0wm6xRUAHhUmg8"
+				}
+			> Truy cập 'https://jwt.io/' check thông tin 'accessToken'
+			
+* Login api:
+	- Update 'server\routes\auth.js'
+		- Add code:
+			//@route POST api/auth/login
+			//@desc Login user
+			//@access Public
+			router.post('/login', async (req, res) => {
+				const { username, password } = req.body
+
+				//Simple validation
+				if (!username || !password)
+					return res.status(400).json({ success: false, message: 'Missing username and/or password' })
+
+				try {
+					//Check for existing user
+					const user = await User.findOne({ username })
+
+					if (!user)
+						return res.status(400).json({ success: false, message: 'Incorrect username or password' })
+
+					//Username found
+					const passwordValid = await argon2.verify(user.password, password)
+
+					if (!passwordValid)
+						return res.status(400).json({ success: false, message: 'Incorrect username or password' })
+
+					//All good
+					//Return token
+					const accessToken = jwt.sign(
+						{ userId: user._id },
+						process.env.ACCESS_TOKEN_SECRET
+					)
+
+					res.json({ success: true, message: 'User logged in successfully', accessToken })
+
+				} catch (error) {
+					console.log(error)
+					res.status(500).json({ success: false, message: 'Internal server error' })
+				}
+			})
+	
+	- Update 'server\request.http'
+		- Add code:
+			###
+
+			POST http://localhost:5000/api/auth/login
+			Content-Type: application/json
+
+			{
+				"username": "tai",
+				"password": "123"
+			}
+			
+* Create a Post > [POST] api:
+	- Add 'server\routes\postRoute.js'
+		const express = require('express')
+		const router = express.Router()
+
+		const Post = require('../models/postModel')
+
+		//@route POST api/posts
+		//@desc Create post
+		//@access Private
+		router.post('/', async (req, res) => {
+			const { title, description, url, status } = req.body
+
+			//Simple valication
+			if (!title)
+				return res.status(400).json({ success: false, message: 'Title is required' })
+
+			try {
+				const newPost = new Post({
+					title,
+					description,
+					url: url.startsWith('https://') ? url : `https://${url}`,
+					status: status || 'TO LEARN',
+					user: '630155c2428c9a10b51bff63'
+				})
+
+				await newPost.save()
+
+				res.json({ success: true, message: 'Happy learning!', post: newPost })
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({ success: false, message: 'Internal server error' })
+			}
+		})
+
+		module.exports = router
+		
+	- Update 'server\index.js'
+		...
+		const postRoute = require('./routes/postRoute')
+		...
+		app.use('/api/posts', postRoute)
+		...
+	
+	- Update 'server\request.http'
+		- Add code:
+			POST http://localhost:5000/api/posts
+			Content-Type: application/json
+
+			{
+				"title": "my first post",
+				"description": "abc",
+				"url": "google.com",
+				"status": "LEARNING"
+			}
+			
+	- Tạo 'server\middlewares\authMiddleware.js'
+		> Thằng này đứng giữa kiểm tra có accessToken trong header hay không, nếu hàng xịn nó tiếp tục cho qua để đi vào router.post(...) của file 'server\routes\post.js'
+		
+			const jwt = require('jsonwebtoken')
+
+			const verifyToken = (req, res, next) => {
+				const authHeader = req.header('Authorization')
+				const token = authHeader && authHeader.split(' ')[1] //Authorization: Bearer xxxxxxxx > split get 'xxxxxxxx'
+
+				if (!token)
+					return res.status(401).json({success: false, message: 'Access token not found'})
+
+				try {
+					const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+					req.userId = decoded.userId
+					next()
+				} catch (error) {
+					console.log(error)
+					return res.status(403).json({success: false, message: 'Invalid token'})
+				}
+			}
+
+			module.exports = verifyToken
+		
+		> https://viblo.asia/p/tim-hieu-ve-http-status-code-lA7GKwx5GKZQ
+			> 401 Unauthorized: Tương tự như 403 Forbidden nhưng được sử dụng khi yêu cầu xác thực là bắt buộc và đã không thành công
+			> 403 Forbidden: Request là hợp lệ nhưng server từ chối đáp ứng nó. Nó có nghĩa là trái phép, người dùng không có quyền cần thiết để tiếp cận với các tài nguyên
+			
+	- Update 'server\routes\post.js'
+		...
+		const verifyToken = require('../middlewares/authMiddleware')
+		...
+		router.post('/', verifyToken, async (req, res) => {
+		...
+		edit:
+			user: '630155c2428c9a10b51bff63'
+		thành
+			user: req.userId
+		
+	- Test 'server\request.http'
+		- Tạo request:
+			POST http://localhost:5000/api/posts
+			Content-Type: application/json
+
+			{
+				"title": "my first post",
+				"description": "abc",
+				"url": "google.com",
+				"status": "LEARNING"
+			}
+		
+				- Sẽ response:
+					{
+					  "success": false,
+					  "message": "Access token not found"
+					}
+			
+		- Hoặc tạo request với token đểu:
+			POST http://localhost:5000/api/posts
+			Content-Type: application/json
+			Authorization: Bearer jkdsjfhsjdk
+
+			{
+				"title": "my first post",
+				"description": "abc",
+				"url": "google.com",
+				"status": "LEARNING"
+			}
+		
+				- Sẽ response:
+					{
+					  "success": false,
+					  "message": "Invalid token"
+					}
+		
+		- Tạo request với token xịn:
+			- Đầu tiên login để lấy token xịn:
+				POST http://localhost:5000/api/auth/login
+				Content-Type: application/json
+
+				{
+					"username": "tai",
+					"password": "123"
+				}
+		
+					- Sẽ response:
+						{
+						  "success": true,
+						  "message": "User logged in successfully",
+						  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjExMzA2NzR9.ufOWtIZzK8KSc_i9TIE1A4IsdM4MEfPV-owR3MTjPsw"
+						}
+			
+			- Copy accessToken rồi tạo request:
+				POST http://localhost:5000/api/posts
+				Content-Type: application/json
+				Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjExMzA2NzR9.ufOWtIZzK8KSc_i9TIE1A4IsdM4MEfPV-owR3MTjPsw
+
+				{
+					"title": "my first post",
+					"description": "abc",
+					"url": "google.com",
+					"status": "LEARNING"
+				}
+		
+					- Sẽ response:						
+						{
+						  "success": true,
+						  "message": "Happy learning!",
+						  "post": {
+							"title": "my first post",
+							"description": "abc",
+							"url": "https://google.com",
+							"status": "LEARNING",
+							"user": "630155c2428c9a10b51bff63",
+							"_id": "6302d7e8713e64196faf593f",
+							"__v": 0
+						  }
+						}
+		
+		- Tạo request với một user đăng ký mới
+			- Register một user:
+				POST http://localhost:5000/api/auth/register
+				Content-Type: application/json
+
+				{
+					"username": "thang",
+					"password": "123"
+				}
+		
+					- Sẽ response:	
+						{
+						  "success": true,
+						  "message": "User created successfully",
+						  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAyZGE2Mjc5MGQyODYyMjEzZjRmZjYiLCJpYXQiOjE2NjExMzEzNjJ9.dLHwTBAPreZuo3V6yFu6b_gZW5EYhlub-EVkD1Yu3B8"
+						}
+			- Tạo một Post request với token ở trên:
+				POST http://localhost:5000/api/posts
+				Content-Type: application/json
+				Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAyZGE2Mjc5MGQyODYyMjEzZjRmZjYiLCJpYXQiOjE2NjExMzEzNjJ9.dLHwTBAPreZuo3V6yFu6b_gZW5EYhlub-EVkD1Yu3B8
+
+				{
+					"title": "React",
+					"description": "React",
+					"url": "React.com",
+					"status": "TO LEARN"
+				}
+		
+					- Sẽ response:	
+						{
+						  "success": true,
+						  "message": "Happy learning!",
+						  "post": {
+							"title": "React",
+							"description": "React",
+							"url": "https://React.com",
+							"status": "TO LEARN",
+							"user": "6302da62790d2862213f4ff6",
+							"_id": "6302dab0790d2862213f4ff8",
+							"__v": 0
+						  }
+						}
+						
+* Posts api [GET]:
+	- Update 'server\routes\post.js'
+		//@route GET api/posts
+		//@desc GET posts
+		//@access Private
+		router.get('/', verifyToken, async(req, res) => {
+			try {
+				const posts = await Post.find({user: req.userId}).populate('user', ['username'])
+				res.json({success: true, posts})
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({ success: false, message: 'Internal server error' })
+			}
+		})
+		
+		> Lưu ý: .populate('user', ['username']) là chỉ lấy ra username trong trường user của post
+		
+	- Test request với 'server\request.http'
+		GET http://localhost:5000/api/posts
+		Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjExMzI1MDV9.C4cDWas0oyYNukLokcI-cu8uXZl6aGxGc9vkFKm0lpw
+		
+					- Sẽ response các posts:	
+						{
+						  "success": true,
+						  "posts": [
+							{
+							  "_id": "6302d7e8713e64196faf593f",
+							  "title": "my first post",
+							  "description": "abc",
+							  "url": "https://google.com",
+							  "status": "LEARNING",
+							  "user": {
+								"_id": "630155c2428c9a10b51bff63",
+								"username": "tai"
+							  },
+							  "__v": 0
+							},
+							{
+							  "_id": "6302d8fc1d0c58fc444689b1",
+							  "title": "my second post",
+							  "description": "shoping",
+							  "url": "https://shopee.com",
+							  "status": "LEARNED",
+							  "user": {
+								"_id": "630155c2428c9a10b51bff63",
+								"username": "tai"
+							  },
+							  "__v": 0
+							}
+						  ]
+						}
+						
+* Update Post [PUT] api:
+	- Update 'server\routes\post.js'
+		//@route PUT api/posts/:id
+		//@desc Update post
+		//@access Private
+		router.put('/:id', verifyToken, async(req, res) => {
+			const { title, description, url, status } = req.body
+
+			//Simple valication
+			if (!title)
+				return res.status(400).json({ success: false, message: 'Title is required' })
+
+			try {
+				let updatedPost = {
+					title,
+					description: description || '',
+					url: (url.startsWith('https://') ? url : `https://${url}`) || '',
+					status: status || 'TO LEARN'
+				}
+
+				const postUpdateCondition = {_id: req.params.id, user: req.userId} //điều kiện để update là phải đúng postId và đúng userId đang login. Lưu ý: req.params.id = '/:id', req.userId=userId được decode trong token
+
+				updatedPost = await Post.findOneAndUpdate(postUpdateCondition, updatedPost, {new: true}) //{new: true} nghĩa là sau khi update xong nó sẽ gán lại mới nhất cho updatedPost, nếu không sẽ trả lại post cũ
+
+				//User not authorised to update post or post not found
+				if (!updatedPost)
+					return res.status(401).json({success: false, message: 'Post not found or user not authorised'}) //401 Unauthorized
+
+				//Success
+				return res.json({success: true, message: 'Excellent progress!', post: updatedPost})
+
+			} catch (error) {
+				
+			}
+		})
+	
+	- Test request với 'server\request.http'
+		PUT http://localhost:5000/api/posts/63016edeaa326c8a8fd6e5c0
+		Content-Type: application/json
+		Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjExMzI1MDV9.C4cDWas0oyYNukLokcI-cu8uXZl6aGxGc9vkFKm0lpw
+
+		{
+			"title": "my first post 2",
+			"description": "abc 2",
+			"url": "google2.com",
+			"status": "LEARNED"
+		}
+		
+			- Sẽ response:
+				{
+				  "success": true,
+				  "message": "Excellent progress!",
+				  "post": {
+					"_id": "63016edeaa326c8a8fd6e5c0",
+					"title": "my first post 2",
+					"description": "abc 2",
+					"url": "https://google2.com",
+					"status": "LEARNED",
+					"user": "630155c2428c9a10b51bff63",
+					"__v": 0
+				  }
+				}
+						
+* Delete Post:
+	- Update 'server\routes\post.js'
+		//@route DELETE api/posts/:id
+		//@desc Update post
+		//@access Private
+		router.delete('/:id', verifyToken, async(req, res) => {
+			try {
+				const postDeleteCondition = {_id: req.params.id, user: req.userId}
+				const deletedPost = await Post.findOneAndDelete(postDeleteCondition)
+
+				//User not authorised to update post or post not found
+				if (!deletedPost)
+					return res.status(401).json({success: false, message: 'Post not found or user not authorised'}) //401 Unauthorized
+
+				//Success
+				return res.json({success: true, message: 'Deleted successfully!', post: deletedPost})
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({ success: false, message: 'Internal server error' })
+			}
+		})
+	
+	- Test request với 'server\request.http'
+		DELETE http://localhost:5000/api/posts/63016edeaa326c8a8fd6e5c0
+		Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzAxNTVjMjQyOGM5YTEwYjUxYmZmNjMiLCJpYXQiOjE2NjExMzI1MDV9.C4cDWas0oyYNukLokcI-cu8uXZl6aGxGc9vkFKm0lpw
+		
+			- Sẽ response:
+				{
+				  "success": true,
+				  "message": "Deleted successfully!",
+				  "post": {
+					"_id": "6302d765713e64196faf593c",
+					"title": "my first post",
+					"description": "abc",
+					"url": "https://google.com",
+					"status": "LEARNING",
+					"user": "630155c2428c9a10b51bff63",
+					"__v": 0
+				  }
+				}
+
+--------------------------------------------------------------------------
+* BẮT ĐẦU FRONT-END
+
+- Tạo Login page
+	- Tạo React client app
+		>>> npx create-react-app client
+		>>> cd client
+		>>> npm start
+	
+	- Update 'client\src\App.css'
+		> Xem code trong file
+	
+	- Tạo folder 'assets' và các file trong nó:
+		client\src\assets
+	
+	>>> cd client
+	
+	- Install những thứ sau:
+		>>> npm i react-bootstrap bootstrap axios react-router-dom
+	
+	- Tạo folders và files:
+		client\src\components\layout\Landing.js
+		client\src\components\auth\Login.js
+		
+	- Update 'client\src\App.js'
+		- Xem code trong file
+			> Lưu ý trong V6 thì mặc định exact là true nên ko cần phải để exact
+		
+	- Tạo folder và files:
+		client\src\components\auth\LoginForm.js
+		client\src\components\auth\RegisterForm.js
+		
+	- Tạo folders và files:
+		client\src\views\AuthView.js
+		
+	- Update 'client\public\index.html'
+		<link
+		  rel="stylesheet"
+		  href="https://cdn.jsdelivr.net/npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css"
+		  integrity="sha256-MSALLcWJbwNhnXKVTgK+jBusxP1SGCExhv1vDIRgX4U="
+		  crossorigin="anonymous"
+		/>
+			
+		> ref: 	https://bootswatch.com/minty/
+				Do clicks: https://bootswatch.com/ > Help > jsDelivr. > /npm/bootswatch@5.2.0/dist > /npm/bootswatch@5.2.0/dist/minty > /npm/bootswatch@5.2.0/dist/minty/bootstrap.min.css > Copy HTML + SRI
+						> https://www.jsdelivr.com/package/npm/bootswatch?path=dist%2Fminty
+						
+	
+	- Connect Service/API & handle Login:
+		- Tạo folders và files:
+			'client\src\constants\commonContant.js'
+				export const API_URL = process.env.NODE_ENV !== 'production' ? 'http://localhost:5000/api' : 'production-api-url'
+
+			'client\src\constants\authConstant.js'
+				export const LOCAL_STORAGE_TOKEN_NAME = 'learnit-mern'
+				
+			'client\src\contexts\authContext.js'
+				> Quản lý toàn bộ trạng thái app trên xác thực người dùng như Login, Logout
+				
+					import {createContext, useReducer} from 'react'
+					import {authReducer} from '../reducers/authReducer'
+					import {API_URL} from '../constants/commonContant'
+					import {LOCAL_STORAGE_TOKEN_NAME} from '../constants/authConstant'
+					import axios from 'axios'
+
+
+					export const authContext = createContext()
+
+
+					const AuthContextProvider = ({children}) => {
+						const [authState, dispath] = useReducer(authReducer, {
+							authLoading: true,
+							isAuthenticated: false,
+							user: null
+						})
+
+						//Login
+						const loginUser = async userForm => {
+							try {
+
+								const response = await axios.post(`${API_URL}/auth/login`, userForm)
+
+								if (response.data.success)
+									localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
+
+								return response.data
+
+							} catch (error) {
+								if (error.response.data)
+									return error.response.data
+								else
+									return { success: false, message: error.message }
+							}
+						}
+
+						//Context data
+						const authContextData = {loginUser}
+
+						///Return provider
+						return (
+							<authContext.Provider value={authContextData}>
+								{children}
+							</authContext.Provider>
+						)
+					}
+
+					export default AuthContextProvider
+				
+			'client\src\reducers\authReducer.js'
+				...
+			
+		- Update 'client\src\App.js'
+			- Bọc Route bằng 'AuthContextProvider'					
+				import AuthContextProvider from './contexts/authContext'
+				...
+				function App() {
+				  return (
+					<AuthContextProvider>
+					  <Router>
+						....
+					  </Router>
+					</AuthContextProvider>    
+				  );
+				}
+				
+		- Update 'client\src\components\auth\LoginForm.js'
+			...
+			import {useState, useContext} from 'react'
+			import { Link, useNavigate } from 'react-router-dom'
+			import { authContext } from '../../contexts/authContext'
+
+			const LoginForm = () => {
+
+				//Context
+				const { loginUser } = useContext(authContext)
+
+				//Router
+				const navigate = useNavigate();
+
+				//Local state
+				const [loginForm, setLoginForm] = useState({
+					username: '',
+					password: ''
+				})
+
+				const {username, password} = loginForm
+
+				const onChangeLoginForm = event => setLoginForm({ ...loginForm, [event.target.name]: event.target.value })
+
+				const login = async event => {
+				  event.preventDefault()
+				  try {
+					
+					const loginData = await loginUser(loginForm)
+
+					  if(loginData.success) {
+						navigate('/dashboard')
+					  }
+					  else {
+						
+					  }
+
+				  } catch (error) {
+					console.log(error)
+				  }
+				}
+
+				return (<>
+				  <Form className='my-4' onSubmit={login}>
+					<Form.Group>
+					  <Form.Control type='text' placeholder='Username' name='username' className='my-3' required value={username} onChange={onChangeLoginForm} />
+					</Form.Group>
+					
+					<Form.Group>
+					  <Form.Control type='password' placeholder='Password' name='password' className='my-3' required value={password} onChange={onChangeLoginForm} />
+					</Form.Group>
+					...
+				)
+			}
+			
+		- Update 'server\index.js'
+			> Fix lỗi: Access to XMLHttpRequest at 'http://localhost:5000/api/auth/login' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+			
+			const cors = require('cors')
+			....
+			app.use(cors())
+			
+		- Tạo file 'client\src\views\DashboardView.js'
+			
+		- Update 'client\src\App.js'
+			...
+			import DashboardView from './views/DashboardView'
+			...
+			<Route path='/DashboardView' element={<DashboardView />} />
+			
+- Logged-in redirects tới trang /dashboard và không cho truy cập các trang Login/Register:
+	- Update 'server\routes\auth.js'
+		...
+		const verifyToken = require('../middlewares/authMiddleware')
+		...
+		//@route GET api/auth
+		//@desc Check if user is logged in
+		//@access Public
+		router.get('/', verifyToken, async (req, res) => {
+			try {
+
+				const user = await User.findById(req.userId).select('-password')
+				if (!user)
+					return res.status(400).json({success: false, message: 'User not found'})
+				res.json({success: true, user})
+
+			} catch (error) {
+				console.log(error)
+				res.status(500).json({success: false, message: 'Internal server error'})
+			}
+		})
+		
+	- Tạo mới 'client\src\utils\setAuthTokenUtil.js'
+		import axios from 'axios'
+
+		const setAuthTokenUtil = token => {
+			if (token) {
+				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+			}
+			else {
+				delete axios.defaults.headers.common['Authorization']
+			}
+		}
+
+		export default setAuthTokenUtil
+		
+	- Update 'client\src\contexts\authContext.js'
+		import setAuthTokenUtil from '../utils/setAuthTokenUtil'
+		...
+		//Authenticate user
+		const loadUser = async () => {
+			if(localStorage[LOCAL_STORAGE_TOKEN_NAME]) {
+				setAuthTokenUtil(localStorage[LOCAL_STORAGE_TOKEN_NAME])
+			}
+
+			try {
+				const response = await axios.get(`${API_URL}/auth`)
+				if (response.data.success) {
+					dispath({type: 'SET_AUTH', payload: {isAuthenticated: true, user: response.data.user}})
+				}
+			} catch (error) {
+				localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+				setAuthTokenUtil(null)
+				dispath({type: 'SET_AUTH', payload: {isAuthenticated: false, user: null}})
+			}
+		}
+				
+		
+	- Update 'client\src\reducers\authReducer.js'
+		export const authReducer = (state, action) => {
+		const {type, payload: {isAuthenticated, user}} = action
+
+		switch(type) {
+			case 'SET_AUTH':
+				return {
+					...state,
+					authLoading: false,
+					isAuthenticated,
+					user
+				}
+			default:
+				return state
+		}
+	}
+	
+	- Update 'client\src\contexts\authContext.js'
+		import {..., useEffect} from 'react'
+		...
+		useEffect(() => {
+			loadUser()
+		}, [])
+		...
+		const authContextData = {loginUser, authState}
+		
+	- Update 'client\src\views\AuthView.js'
+		import ..., { useContext } from 'react'
+		import { authContext } from '../contexts/authContext'
+		import { Navigate } from 'react-router-dom'
+		import { Spinner } from 'react-bootstrap'
+		...
+		const {authState: {authLoading, isAuthenticated}} = useContext(authContext)
+
+		let body
+
+		if (authLoading)
+			body = (
+				<div className='d-flex justify-content-center mt-2'>
+					<Spinner animation='border' variant='info' />
+				</div>
+			)
+		else if (isAuthenticated)
+			return <Navigate to='/dashboard' />
+		else
+			body = (<>
+				{authRoute === 'login' && <LoginForm/> }
+				{authRoute === 'register' && <RegisterForm/> }
+			</>)
+		
+- Bảo vệ Route
+	> Truy cập /dashboard nếu chưa login sẽ redirect lại Login:
+	> Ref: https://stackoverflow.com/questions/69864165/error-privateroute-is-not-a-route-component-all-component-children-of-rou
+	
+	- Tạo 'client\src\components\routing\PrivateRoute.js'
+		import {useContext} from 'react'
+		import { Navigate } from 'react-router-dom'
+		import { authContext } from '../../contexts/authContext'
+		import { Spinner } from 'react-bootstrap'
+
+		const PrivateRoute = ({element: Element}) => {
+
+			const {authState: {authLoading, isAuthenticated}} = useContext(authContext)
+
+			if(authLoading)
+			{
+				return (
+					<div className='spinner-container'>
+						<Spinner animation='border' variant='info' />
+					</div>
+				)
+			}
+
+			return isAuthenticated ? <Element /> : <Navigate to="/login" />
+		}
+
+		export default PrivateRoute
+		
+	- Update 'client\src\App.js'
+		import PrivateRoute from './components/routing/PrivateRoute';
+		...
+		<Route path="/dashboard" element={<PrivateRoute element={DashboardView} />} />
+		
+	- Update 'client\src\contexts\authContext.js'
+		> Fix lỗi khi login success nhưng không redirect được tới dashboard page
+		
+		const loginUser = async userForm => {
+			try {
+				...
+				await loadUser()					
+				...
+			}
+			...
+		}
+	
+- Hiển thị Alert khi login fails
+	- Tạo file 'client\src\components\layouts\AlertLayout.js'
+		> rafce+tab:
+			import React from 'react'
+			import { Alert } from 'react-bootstrap';
+			import AlertLayout from '../layouts/AlertLayout'
+
+			const AlertLayout = ({info}) => {
+			  return info && (
+				<Alert variant={info.type}>{info.message}</Alert>
+			  )
+			}
+
+			export default AlertLayout
+	
+	- Update 'client\src\components\auth\LoginForm.js'
+		...
+		const [ alert, setAlert ] = useState(null)
+		...
+		setAlert({type: 'danger', message: loginData.message})
+        //show alert for a few second and then hide it
+        setTimeout(() => setAlert(null), 3000)
+		...
+		<AlertLayout info={alert} />
+		...
+		
+		
+- Tạo Register page
+	- Update 'client\src\components\auth\RegisterForm.js'
+		import { useState, useContext } from 'react'
+		import { authContext } from '../../contexts/authContext'
+		import AlertLayout from '../layouts/AlertLayout'
+		...
+		[Xem code...]
+		
+	- Update 'client\src\contexts\authContext.js'		
+		//Register
+		const registerUser = async userForm => {
+			try {
+
+				const response = await axios.post(`${API_URL}/auth/register`, userForm)
+
+				if (response.data.success)
+					localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, response.data.accessToken)
+
+				await loadUser()
+					
+				return response.data
+
+			} catch (error) {
+				if (error.response.data)
+					return error.response.data
+				else
+					return { success: false, message: error.message }
+			}
+		}
+
+		//Context data
+		const authContextData = {loginUser, registerUser, authState}
+		
+- Tạo một Navigation bar / About page và chức năng Logout
+	- Tạo file 'client\src\components\layouts\NavbarLayout.js'
+		[Xem code....]
+		
+	- Update 'client\src\components\routing\PrivateRoute.js'
+		import NavbarLayout from '../layouts/NavbarLayout'
+		...
+		<NavbarLayout/>
+		...
+		
+	- Tạo 'client\src\views\AboutView.js'
+		import React, {useContext} from 'react'
+		import {Link} from 'react-router-dom'
+		import {Nav, Button, Navbar} from 'react-bootstrap'
+		import learnItLogo from '../../assets/logo.svg'
+		import logoutIcon from '../../assets/logout.svg'
+		import { authContext } from '../../contexts/authContext'
+
+		const NavbarLayout = () => {
+
+			const {
+				authState: {
+					user: {username}
+				},
+				logoutUser
+			} = useContext(authContext)
+
+			const handleLogout = () => logoutUser()
+
+			return (
+				...
+			)
+		}
+
+		export default NavbarLayout
+		
+	- Update 'client\src\App.js'
+		import AboutView from './views/AboutView';
+		...
+		<Route path="/about" element={<PrivateRoute element={AboutView} />} />
+		...
+		
+	- Update 'client\src\constants\authConstant.js'
+		export const SET_AUTH = 'SET_AUTH'
+		
+	- Update 'client\src\reducers\authReducer.js'
+		import {SET_AUTH} from '../constants/authConstant'
+		...
+		switch(type) {
+			case SET_AUTH:
+		...
+	
+	- Update 'client\src\contexts\authContext.js'
+		import {..., SET_AUTH} from '../constants/authConstant'
+		...
+		//Logout
+		const logoutUser = () => {
+			localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME)
+			
+			dispath({
+				type: SET_AUTH, 
+				payload: {isAuthenticated: false, user: null}
+			})
+		}
+		...
+		const authContextData = {..., logoutUser, ...}
+		
+		
+- Build trang Dashboard
+	- Tạo 'client\src\constants\postConstant.js'
+		export const POSTS_LOADED_SUCCESS = 'POSTS_LOADED_SUCCESS'
+		export const POSTS_LOADED_FAIL = 'POSTS_LOADED_FAIL'
+		
+	- Tạo 'client\src\reducers\postReducer.js'
+		import { POSTS_LOADED_FAIL, POSTS_LOADED_SUCCESS } from "../constants/postConstant"
+
+		export const postReducer = (state, action) => {
+			const {type, payload} = action
+
+			switch(type)
+			{
+				case POSTS_LOADED_SUCCESS:
+					return {
+						...state,
+						posts: payload,
+						postsLoading: false
+					}
+
+				case POSTS_LOADED_FAIL:
+					return {
+						...state,
+						posts: [],
+						postsLoading: false
+					}
+
+				default:
+					return state
+			}
+		}
+		
+	- Tạo 'client\src\contexts\postContext.js'
+		import {createContext, useReducer} from 'react'
+		import {postReducer} from '../reducers/postReducer'
+		import { API_URL } from '../constants/commonContant'
+		import { POSTS_LOADED_SUCCESS } from '../constants/postConstant'
+		import axios from 'axios'
+
+		export const postContext = createContext()
+
+		const PostContextProvider = ({children}) => {
+
+			//State
+			const [postState, dispath] = useReducer(postReducer, {
+				posts: [],
+				postsLoading: true
+			})
+
+			//Get all posts
+			const getPosts = async() => {
+				try {
+					const response = await axios.get(`${API_URL}/posts`)
+					if (response.data.success) {
+						dispath({
+							type: POSTS_LOADED_SUCCESS, 
+							payload: response.data.posts
+						})
+					}
+				} catch (error) {
+					dispath({
+						type: POSTS_LOADED_FAIL
+					})
+				}
+			}
+
+			//Post context data
+			const postContextData = {postState, getPosts}
+
+			return (
+				<postContext.Provider value={postContextData}>
+					{children}
+				</postContext.Provider>
+			)
+		}
+
+		export default PostContextProvider
+	
+	- Update 'client\src\App.js'
+		import PostContextProvider from './contexts/postContext';
+		...
+		function App() {
+		  return (
+			...
+			  <PostContextProvider>
+				...
+			  </PostContextProvider>
+			...
+		  );
+		}
+	
+	- Update 'client\src\views\DashboardView.js'
+		import { postContext } from "../contexts/postContext"
+		import { useContext, useEffect } from "react"
+		import { Button, Card, Col, Row, Spinner } from "react-bootstrap"
+		import { authContext } from "../contexts/authContext"
+		import SinglePost from "../components/posts/SinglePost"
+
+		const DashboardView = () => {
+
+		  //Contexts
+		  const {authState: {user: {username}}} = useContext(authContext)
+
+		  const {
+			postState: {posts, postsLoading},
+			getPosts
+		  } = useContext(postContext)
+
+
+		  useEffect(() => {
+			getPosts()
+		  }, [])
+
+
+		  let body = null
+
+		  if (postsLoading) {
+			body = (
+			  <div className="spinner-container">
+				<Spinner animation="border" variant="info" />
+			  </div>
+			)
+		  }
+		  else if (posts.length === 0) {
+			body = (
+			  <Card className="text-center- mx-5 my-5">
+				<Card.Header as='h1'>Hi {username}</Card.Header>
+				<Card.Body>
+				  <Card.Title>Welcome to LearnIt</Card.Title>
+				  <Card.Text>
+					Click the button below to track your first skill to learn
+				  </Card.Text>
+				  <Button variant="primary">LearnIt!</Button>
+				</Card.Body>
+			  </Card>
+			)
+		  }
+		  else {
+			body = (
+			  <Row className="row-cols-1 row-cols-md-3 g-4 mx-auto mt-3">
+				{posts.map(post => (
+				  <Col key={post._id} className='my-2'>
+					<SinglePost post={post} />
+				  </Col>
+				))}
+			  </Row>
+			)
+		  }
+
+
+		  return (<>
+			{body}
+		  </>)
+		}
+
+		export default DashboardView
+	
+	- Tạo 'client\src\components\posts\SinglePost.js'
+		import { Button, Card, Row, Col, Badge } from "react-bootstrap"
+
+		const SinglePost = ({post: {_id, status, title, description, url}}) => (
+			<Card
+				className="shadow"
+				border={
+					status === 'LEARNED' 
+					? 'success' 
+					: status === 'LEARNING'
+					? 'warning' : 'danger'
+				}
+			>
+				<Card.Body>
+					<Card.Title>
+						<Row>
+							<Col>
+								<p className="post-title">{title}</p>
+								<Badge
+									pill //để bo tròn nút hơn
+									bg={
+										status === 'LEARNED' 
+										? 'success' 
+										: status === 'LEARNING'
+										? 'warning' : 'danger'
+									}
+								>
+									{status}
+								</Badge>
+							</Col>
+							
+							<Col className="text-right">
+								Buttons
+							</Col>
+						</Row>
+					</Card.Title>
+
+					<Card.Text>
+						{description}
+					</Card.Text>
+				</Card.Body>
+			</Card>
+		)
+
+		export default SinglePost
+		
+- Tạo các nút action trong Dashboard (ActionButtons)
+	- Tạo 'client\src\components\posts\ActionButtons.js'
+		import { Button } from "react-bootstrap"
+		import playIcon from '../../assets/play-btn.svg'
+		import editIcon from '../../assets/pencil.svg'
+		import deleteIcon from '../../assets/trash.svg'
+
+		const ActionButtons = ({url, _id}) => {
+		  return (
+			<>
+				<Button className="post-button" href={url} target='_blank'>
+					<img src={playIcon} alt='play' width='32' height='32' />
+				</Button>
+				
+				<Button className="post-button">
+					<img src={editIcon} alt='edit' width='24' height='24' />
+				</Button>
+				
+				<Button className="post-button">
+					<img src={deleteIcon} alt='delete' width='32' height='32' />
+				</Button>
+			</>
+		  )
+		}
+
+		export default ActionButtons
+	
+	- Update 'client\src\components\posts\SinglePost.js'
+		import ActionButtons from "./ActionButtons"
+		...
+		<ActionButtons url={url} _id={_id} />
+		...
+		
+- Add Post Modal
+	- Tạo 'client\src\components\posts\AddPostModal.js'
+		import { Modal, Button, Form } from "react-bootstrap"
+
+		const AddPostModal = () => {
+		  return (
+			<Modal show={true}>
+				<Modal.Header closeButton>
+					<Modal.Title>What do you want to learn?</Modal.Title>
+				</Modal.Header>
+
+				<Form>
+					<Modal.Body>
+						<Form.Group>
+							<Form.Control type="text" placeholder="Title" name='title' required aria-describedby="title-help" />
+							<Form.Text id="title-help" muted>Required</Form.Text>
+						</Form.Group>
+						
+						<Form.Group>
+							<Form.Control as='textarea' rows={3} placeholder="Description" name='description' />
+						</Form.Group>
+						
+						<Form.Group>
+							<Form.Control type="text" placeholder="Youtube Tutorial URL" name='url' />
+						</Form.Group>
+					</Modal.Body>
+
+					<Modal.Footer>
+						<Button variant="secondary">Cancel</Button>
+						<Button variant="primary" type="submit">LearnIt!</Button>
+					</Modal.Footer>
+				</Form>
+			</Modal>
+		  )
+		}
+
+		export default AddPostModal
+		
+	- Update 'client\src\views\DashboardView.js'
+		import AddPostModal from "../components/posts/AddPostModal"
+		...
+		<AddPostModal/>
+		
+	- Update 'client\src\contexts\postContext.js'
+		import {..., useState} from 'react'
+		...
+		const [showAddPostModal, setShowAddPostModal] = useState(false)
+		...
+		const postContextData = {..., showAddPostModal, setShowAddPostModal}
+		
+	- Update 'client\src\views\DashboardView.js'
+		import addIcon from '../assets/plus-circle-fill.svg'
+		import { ..., OverlayTrigger, Tooltip } from "react-bootstrap"
+		...
+		<OverlayTrigger placement="left" overlay={<Tooltip>Add a new thing to learn</Tooltip>}>
+			<Button className="btn-floating" onClick={setShowAddPostModal.bind(this, true)}>
+			  <img src={addIcon} alt='add-post' width={60} height='60' />
+			</Button>
+		</OverlayTrigger>
+		
+	- Update 'client\src\components\posts\AddPostModal.js'
+		import { postContext } from "../../contexts/postContext"
+		import { useContext } from "react"
+		...
+		const { showAddPostModal, setShowAddPostModal } = useContext(postContext)
+		
+		const handleClose = () => {
+			setShowAddPostModal(false)
+		}
+
+		return (
+			<Modal show={showAddPostModal} onHide={handleClose}>
+			...
+			<Button variant="secondary" onClick={handleClose}>Cancel</Button>
+			
+- Xử lý thêm một Post
+	- Update 'client\src\constants\postConstant.js'
+		export const ADD_POST = 'ADD_POST'
+		
+	- Update 'client\src\reducers\postReducer.js'
+		import { ..., ADD_POST } from "../constants/postConstant"
+		...
+		case ADD_POST:
+            return {
+                ...state,
+                posts: [...state.posts, payload]
+            }
+		
+	- Update 'client\src\contexts\postContext.js'
+		import { ..., ADD_POST } from '../constants/postConstant'
+		...
+		const [showToast, setShowToast] = useState({
+			show: true,
+			message: '',
+			type: null
+		})
+		...
+		
+		//Add post
+		const addPost = async newPost => {
+			try {
+				const response = await axios.post(`${API_URL}/posts`, newPost)
+				
+				if(response.data.success) {
+					dispath({type: ADD_POST, payload: response.data.post})
+					return response.data
+				}
+
+			} catch (error) {
+				if (error.response.data)
+					return error.response.data
+				else
+					return { success: false, message: 'Server error' }
+			}
+		}
+
+		//Post context data
+		const postContextData = {..., addPost, showToast, setShowToast}
+
+	- Update 'client\src\components\posts\AddPostModal.js'
+		import { ..., useState } from "react"
+		...
+		//Context
+		const { ..., addPost, setShowToast } = useContext(postContext)
+	
+		const [newPost, setNewPost] = useState({ title: '', description: '', url: '', status: 'TO LEARN' })
+		
+		const {title, description, url} = newPost
+		
+		const onChangeNewPostForm = event => {
+			setNewPost({ ...newPost, [event.target.name]: event.target.value })
+		}
+		
+		const handleClose = () => {
+			resetAddPostData()
+		}
+		
+		const handleSubmit = async event => {
+			event.preventDefault()
+			const {success, message} = await addPost(newPost)
+			resetAddPostData()
+			setShowToast({show: true, message, type: success ? 'success' : 'danger'})
+		}
+
+		const resetAddPostData = () => {
+			setNewPost({ title: '', description: '', url: '', status: 'TO LEARN' })
+			setShowAddPostModal(false)
+		}
+		...
+		<Form onSubmit={handleSubmit}>
+		
+	- Update 'client\src\views\DashboardView.js'
+		import { Toast } from "react-bootstrap"
+		...
+		const {
+			...,
+			showToast: {show, message, type},
+			setShowToast
+		} = useContext(postContext)
+		...
+		
+		{/* After post is added, show toast */}
+		<Toast 
+		  show={show} 
+		  style={{position: 'fixed', top: '20%', right: '10px'}} 
+		  className={`bg-${type} text-white`}
+		  onClose={setShowToast.bind(this, {show: false, message: '', type: null})}
+		  delay={3000}
+		  autohide
+		>
+		  <Toast.Body>
+			<strong>{message}</strong>
+		  </Toast.Body>
+		</Toast>
+		
+- Xử lý Click nút LearnIt! để thêm Post khi User chưa có bất Post nào
+	- Update 'client\src\views\DashboardView.js'
+		<Button variant="primary" onClick={setShowAddPostModal.bind(this, true)}>LearnIt!</Button>
+		
+- Xử lý xóa Post
+	- Update 'client\src\constants\postConstant.js'
+		export const DELETE_POST = 'DELETE_POST'
+		
+	- Update 'client\src\reducers\postReducer.js'
+		import { ..., DELETE_POST } from "../constants/postConstant"
+		...
+        case DELETE_POST:
+            return {
+                ...state,
+                posts: state.posts.filter(post => post._id !== payload)
+            }
+	
+	- Update 'client\src\contexts\postContext.js'
+		import { ..., DELETE_POST } from '../constants/postConstant'
+		...
+		//Delete post
+		const deletePost = async postId => {
+			try {
+				const response = await axios.delete(`${API_URL}/posts/${postId}`)
+
+				if (response.data.success) {
+					dispath({type: DELETE_POST, payload: postId})
+				}
+
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		...
+		//Post context data
+		const postContextData = {
+			..., 
+			deletePost
+		}
+		
+	- Update 'client\src\components\posts\ActionButtons.js'
+		import { useContext } from "react"
+		import { postContext } from "../../contexts/postContext"
+		...
+		<Button className="post-button" onClick={deletePost.bind(this, _id)}>
+		
+- Xử lý update Post
+	- Update 'client\src\constants\postConstant.js'
+		export const UPDATE_POST = 'UPDATE_POST'
+		
+	- Update 'client\src\contexts\postContext.js'
+		import { ..., UPDATE_POST } from '../constants/postConstant'
+		...
+		//Update post
+		const updatePost = async updatedPost => {
+			try {
+				const response = await axios.put(`${API_URL}/posts/${updatedPost._id}`, updatedPost)
+
+				if (response.data.success) {
+					dispath({type: UPDATE_POST, payload: response.data.post})
+					return response.data
+				}
+
+			} catch (error) {
+				if (error.response.data)
+					return error.response.data
+				else
+					return { success: false, message: 'Server error' }
+			}
+		}
+		...
+		const postContextData = {
+			...,
+			updatePost
+		}
+		
+	- Update 'client\src\reducers\postReducer.js'
+		import { ..., UPDATE_POST } from "../constants/postConstant"
+		...
+		case UPDATE_POST:
+            const newPost = state.posts.map(post => 
+                post._id === payload._id ? payload : post
+            )
+
+            return {
+                ...state,
+                posts: newPost
+            }
+	
+	- Update 'client\src\constants\postConstant.js'
+		export const FIND_POST = 'FIND_POST'
+			
+	- Update 'client\src\contexts\postContext.js'
+		import { ..., FIND_POST } from '../constants/postConstant'
+		...
+		const [postState, dispath] = useReducer(postReducer, {
+			post: null,
+			...
+		})
+			> Thêm một field mới 'post' vào state để phân biệt trường hợp Add và Update một Post
+		...
+		//Find post when user is updating post
+		const findPost = postId => {
+			const post = postState.posts.find(post => post_id === postId)
+			dispath({type: FIND_POST, payload: post})
+		}
+		...
+		const postContextData = {
+			...,
+			findPost
+		}
+		
+	- Update 'client\src\reducers\postReducer.js'
+		import { ..., FIND_POST } from "../constants/postConstant"
+		...
+		case FIND_POST:
+            return {
+                ...state,
+                post: payload
+            }
+		
+	- Update 'client\src\contexts\postContext.js'
+		const [showUpdatePostModal, setShowUpdatePostModal] = useState(false)
+		...
+		const postContextData = {
+			...
+			showUpdatePostModal, 
+			setShowUpdatePostModal,
+			...
+		}
+			
+	- Update 'client\src\components\posts\ActionButtons.js'
+		const {..., findPost, showUpdatePostModal, setShowUpdatePostModal} = useContext(postContext)
+		...
+		const choosePost = postId => {
+			findPost(postId)
+			setShowUpdatePostModal(true)
+		}
+		...
+		<Button className="post-button" onClick={choosePost.bind(this, _id)}>
+		
+	- Tạo 'client\src\components\posts\UpdatePostModal.js'
+		import { Modal, Button, Form } from "react-bootstrap"
+		import { postContext } from "../../contexts/postContext"
+		import { useContext, useEffect, useState } from "react"
+
+		const UpdatePostModal = () => {
+			//Context
+			const { postState: {post}, showUpdatePostModal, setShowUpdatePostModal, updatePost, setShowToast } = useContext(postContext)
+
+			//State
+			const [updatedPost, setUpdatedPost] = useState(post)
+
+			const {title, description, url, status} = updatedPost
+
+			useEffect(() => setUpdatedPost(post), [post])
+
+			const onChangeUpdatedPostForm = event => {
+				setUpdatedPost({ ...updatedPost, [event.target.name]: event.target.value })
+			}
+
+			const handleClose = () => {
+				setUpdatedPost(post)
+				setShowUpdatePostModal(false)
+			}
+
+			const handleSubmit = async event => {
+				event.preventDefault()
+				const {success, message} = await updatePost(updatedPost)
+				
+				setShowUpdatePostModal(false)
+				setShowToast({show: true, message, type: success ? 'success' : 'danger'})
+			}
+
+			return (
+				<Modal show={showUpdatePostModal} onHide={handleClose}>
+					<Modal.Header closeButton>
+						<Modal.Title>Making progress?</Modal.Title>
+					</Modal.Header>
+
+					<Form onSubmit={handleSubmit}>
+						<Modal.Body>
+
+							<Form.Group>
+								<Form.Control type="text" placeholder="Title" name='title' required aria-describedby="title-help" value={title} onChange={onChangeUpdatedPostForm} />
+								<Form.Text id="title-help" muted>Required</Form.Text>
+							</Form.Group>
+							
+							<Form.Group>
+								<Form.Control as='textarea' rows={3} placeholder="Description" name='description' value={description} onChange={onChangeUpdatedPostForm} />
+							</Form.Group>
+							
+							<Form.Group>
+								<Form.Control type="text" placeholder="Youtube Tutorial URL" name='url' value={url} onChange={onChangeUpdatedPostForm} />
+							</Form.Group>
+							
+							<Form.Group>
+								<Form.Control as="select" name='status' value={status} onChange={onChangeUpdatedPostForm} className="form-select" >
+									<option value='TO LEARN'>TO LEARN</option>
+									<option value='LEARNING'>LEARNING</option>
+									<option value='LEARNED'>LEARNED</option>
+								</Form.Control>
+							</Form.Group>
+
+						</Modal.Body>
+
+						<Modal.Footer>
+							<Button variant="secondary" onClick={handleClose}>Cancel</Button>
+							<Button variant="primary" type="submit">LearnIt!</Button>
+						</Modal.Footer>
+					</Form>
+				</Modal>
+			)
+		}
+
+		export default UpdatePostModal
+		
+		
+	- Update 'client\src\views\DashboardView.js'
+		import UpdatePostModal from "../components/posts/UpdatePostModal"
+		...
+		const {
+			postState: {post, ...},
+			...
+		} = useContext(postContext)
+			> Lấy ra post từ context
+		...
+		{post && <UpdatePostModal/>}
+		
+- Deploy lên Heroku và Netlify
+	- Update 'server\index.js'
+		const PORT = process.env.PORT || 5000
+	
+	- Update 'server\package.json'
+		"scripts": {
+			"start": "node index",
+			...
+		  },
+		  
+	- Tạo 'server\Procfile'
+		web: npm run start
+		
+	- Login 'https://id.heroku.com/login'
+		truongductai.vn@gmail.com/fbi..A
+		
+	- Cài Heroku CLI 'https://devcenter.heroku.com/articles/heroku-cli'
+		- Download chỗ 'Windows 64-bit installer'
+		- Cài nó
+		- Cài xong, mở CMD gõ lần lượt lệnh theo các bước:
+			- Gõ 
+				>>> heroku
+					> nếu hiện thông tin version... thì là thành công		
+			- Gõ 
+				>>> heroku login
+					> để tự động mở trình duyệt để login
+					> Login bằng tài khoản ở trên
+			- Gõ 
+				>>> heroku create
+			- Mở 'https://dashboard.heroku.com/apps' sẽ nhìn thấy app được tạo tên mặc định là 'pacific-plains-99595'
+			- Click vào tên app 'pacific-plains-99595'
+			- Click vào tab 'Deploy', có link kiểu 'https://dashboard.heroku.com/apps/pacific-plains-99595/deploy/heroku-git'
+				> Kéo xuống dưới xem hướng dẫn gõ lệnh, kiểu như: (xem thôi, không chạy những lệnh này)
+					$ cd my-project/
+					$ git init
+					$ heroku git:remote -a pacific-plains-99595
+			- Cd ta thực mục cha (cha của thư mục Client và Server), kiểu như 'G:\Learning\Programming\MERN-PROJECT>', rồi chạy lệnh:
+				>>> heroku git:remote -a pacific-plains-99595
+					> lưu ý không cần chạy 'git init' vì đã thực hiện ở đầu của file notes.txt này (khi mà đẩy lên github)
+				>>> git status	HOẶC:	git st
+					> đây là lệnh git status để xem
+			- Nhớ bỏ .env trong file '.gitignore'
+				> file này lưu những thông tin bảo mật
+				
+			- Tạo 'server\.env.example'
+				DB_USERNAME=yourusername
+				DB_PASSWORD=yourpassword
+				ACCESS_TOKEN_SECRET=yoursecret
+				
+					> mục đích tạo file không dùng, mà chỉ để commit lên github để gợi nhớ/tránh quên là phải có file 'server\.env'
+					
+			- Chạy các lệnh sau để commit lên cả git của github và git của heroku:
+				>>>git add .
+				>>>git status
+				>>>git commit -m "commit"	HOẶC:	git commit -am "commit"
+				>>>git push -u origin main
+					> dànhcho github
+				>>>git push heroku main
+					> Lỗi kiểu 'Warning: heroku update available from 7.60.2 to 7.63.0.' có thể phải nâng cấp heroku:
+						>>> npm update -g heroku
+							Hoặc >>> heroku update
+						>>> heroku -v
+					> hoặc:
+						>>>git push heroku main:main
+							> push main ở local lên nhánh main của heroku
+			- Nếu lỗi 'failed to push some refs to https://git.heroku.com/pacific-plains-99595' thì chạy lệnh:
+				>>> git subtree push --prefix server heroku main
+					> nếu cần thì
+						>>> git pull heroku main
+					> và
+						>>> git push -f heroku  main
+		
+		----------------------------------				
+		* Nhiều lỗi xảy ra quá > Làm lại các bước ở trên như sau:
+			- Download Heroku CLI
+			>>> cd MERN-PROJECT (thư mục cha mà chứa folders 'Client' vs 'server')
+			>>> heroku login
+			>>> heroku create
+			- vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/pacific-plains-99595/deploy/heroku-git' để xem các lệnh git tiếp theo
+			>>> git init
+			>>> git branch -M main
+			>>> heroku git:remote -a pacific-plains-99595
+				> 'pacific-plains-99595' là tên app cần phải thay
+			>>> git add .
+			>>> git commit -am "make it better"
+			>>> git subtree push --prefix server heroku main 
+				> chạy lệnh này để nó nhận thư mục server và rồi đọc thông tin trong đó để install các thứ 
+				> vì nếu chạy lênh 'git push heroku main' có thể gặp lỗi sau (do nó không nhận biết được/không đọc được các file cấu hình app trong thư mục cha là thuộc nodejs, python, hay gì..):
+					Push failed
+					Push rejected to pacific-plains-99595.
+					! [remote rejected] main -> main (pre-receive hook declined)
+					error: failed to push some refs to 'https://git.heroku.com/pacific-plains-99595.git'
+			
