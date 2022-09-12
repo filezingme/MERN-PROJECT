@@ -2057,6 +2057,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		>>> git status
 		>>> git add .
 		>>> git commit -m "prepare deploy"
+		>>> git push -u origin main
 		
 	- Truy cập 'https://www.netlify.com/'
 		- Đăng nhập bằng tài khoản github: filezingme/fbiA
