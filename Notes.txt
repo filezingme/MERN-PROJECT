@@ -1939,80 +1939,49 @@ Ref react:https://www.w3schools.com/react/default.asp
 	- Login 'https://id.heroku.com/login'
 		truongductai.vn@gmail.com/fbi..A
 		
-	- Cài Heroku CLI 'https://devcenter.heroku.com/articles/heroku-cli'
-		- Download chỗ 'Windows 64-bit installer'
-		- Cài nó
-		- Cài xong, mở CMD gõ lần lượt lệnh theo các bước:
-			- Gõ 
-				>>> heroku
-					> nếu hiện thông tin version... thì là thành công		
-			- Gõ 
-				>>> heroku login
-					> để tự động mở trình duyệt để login
-					> Login bằng tài khoản ở trên
-			- Gõ 
-				>>> heroku create
-			- Mở 'https://dashboard.heroku.com/apps' sẽ nhìn thấy app được tạo tên mặc định là 'pacific-plains-99595'
-			- Click vào tên app 'pacific-plains-99595'
-			- Click vào tab 'Deploy', có link kiểu 'https://dashboard.heroku.com/apps/pacific-plains-99595/deploy/heroku-git'
-				> Kéo xuống dưới xem hướng dẫn gõ lệnh, kiểu như: (xem thôi, không chạy những lệnh này)
-					$ cd my-project/
-					$ git init
-					$ heroku git:remote -a pacific-plains-99595
-			- Cd ta thực mục cha (cha của thư mục Client và Server), kiểu như 'G:\Learning\Programming\MERN-PROJECT>', rồi chạy lệnh:
-				>>> heroku git:remote -a pacific-plains-99595
-					> lưu ý không cần chạy 'git init' vì đã thực hiện ở đầu của file notes.txt này (khi mà đẩy lên github)
-				>>> git status	HOẶC:	git st
-					> đây là lệnh git status để xem
-			- Nhớ bỏ .env trong file '.gitignore'
-				> file này lưu những thông tin bảo mật
-				
-			- Tạo 'server\.env.example'
-				DB_USERNAME=yourusername
-				DB_PASSWORD=yourpassword
-				ACCESS_TOKEN_SECRET=yoursecret
-				
-					> mục đích tạo file không dùng, mà chỉ để commit lên github để gợi nhớ/tránh quên là phải có file 'server\.env'
-					
-			- Chạy các lệnh sau để commit lên cả git của github và git của heroku:
-				>>>git add .
-				>>>git status
-				>>>git commit -m "commit"	HOẶC:	git commit -am "commit"
-				>>>git push -u origin main
-					> dànhcho github
-				>>>git push heroku main
-					> Lỗi kiểu 'Warning: heroku update available from 7.60.2 to 7.63.0.' có thể phải nâng cấp heroku:
-						>>> npm update -g heroku
-							Hoặc >>> heroku update
-						>>> heroku -v
-					> hoặc:
-						>>>git push heroku main:main
-							> push main ở local lên nhánh main của heroku
-			- Nếu lỗi 'failed to push some refs to https://git.heroku.com/pacific-plains-99595' thì chạy lệnh:
-				>>> git subtree push --prefix server heroku main
-					> nếu cần thì
-						>>> git pull heroku main
-					> và
-						>>> git push -f heroku  main
+	- Nhớ bỏ .env trong file '.gitignore'
+		> file này lưu những thông tin bảo mật
 		
-		----------------------------------				
-		* Nhiều lỗi xảy ra quá > Làm lại các bước ở trên như sau:
-			- Download Heroku CLI
-			>>> cd MERN-PROJECT (thư mục cha mà chứa folders 'Client' vs 'server')
-			>>> heroku login
-			>>> heroku create
-			- vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/pacific-plains-99595/deploy/heroku-git' để xem các lệnh git tiếp theo
-			>>> git init
-			>>> git branch -M main
-			>>> heroku git:remote -a pacific-plains-99595
-				> 'pacific-plains-99595' là tên app cần phải thay
-			>>> git add .
-			>>> git commit -am "make it better"
-			>>> git subtree push --prefix server heroku main 
-				> chạy lệnh này để nó nhận thư mục server và rồi đọc thông tin trong đó để install các thứ 
-				> vì nếu chạy lênh 'git push heroku main' có thể gặp lỗi sau (do nó không nhận biết được/không đọc được các file cấu hình app trong thư mục cha là thuộc nodejs, python, hay gì..):
-					Push failed
-					Push rejected to pacific-plains-99595.
-					! [remote rejected] main -> main (pre-receive hook declined)
-					error: failed to push some refs to 'https://git.heroku.com/pacific-plains-99595.git'
+	- Tạo 'server\.env.example'
+		DB_USERNAME=yourusername
+		DB_PASSWORD=yourpassword
+		ACCESS_TOKEN_SECRET=yoursecret
+		
+			> mục đích tạo file không dùng, mà chỉ để commit lên github để gợi nhớ/tránh quên là phải có file 'server\.env'
 			
+	- Download Heroku CLI & Cài nó
+		> 'https://devcenter.heroku.com/articles/heroku-cli'
+		> chọn 'Windows 64-bit installer'
+	- Cài xong, mở CMD gõ lần lượt lệnh theo các bước:
+		>>> cd MERN-PROJECT (thư mục cha mà chứa folders 'Client' vs 'server')
+		>>> heroku login
+		>>> heroku create
+		- vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/pacific-plains-99595/deploy/heroku-git' để xem các lệnh git tiếp theo
+		>>> git init
+		>>> git branch -M main
+		>>> heroku git:remote -a pacific-plains-99595
+			> 'pacific-plains-99595' là tên app cần phải thay
+		>>> git add .
+		>>> git commit -am "make it better"
+		>>> git subtree push --prefix server heroku main 
+			> chạy lệnh này để nó nhận thư mục server và rồi đọc thông tin trong đó để install các thứ 
+			> vì nếu chạy lênh 'git push heroku main' có thể gặp lỗi sau (do nó không nhận biết được/không đọc được các file cấu hình app trong thư mục cha là thuộc nodejs, python, hay gì..):
+				Push failed
+				Push rejected to pacific-plains-99595.
+				! [remote rejected] main -> main (pre-receive hook declined)
+				error: failed to push some refs to 'https://git.heroku.com/pacific-plains-99595.git'
+			
+			> chú ý:
+				> nếu cần thì
+					>>> git pull heroku main
+				> và
+					>>> git push -f heroku  main
+				
+				> nếu lỗi kiểu 'Warning: heroku update available from 7.60.2 to 7.63.0.' có thể phải nâng cấp heroku:
+					>>> npm update -g heroku
+						Hoặc >>> heroku update
+					>>> heroku -v
+				> hoặc:
+					>>>git push heroku main:main
+						> push main ở local lên nhánh main của heroku
+		
