@@ -1964,6 +1964,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		>>> git add .
 		>>> git commit -am "make it better"
 		>>> git subtree push --prefix server heroku main 
+			> cú pháp: 'git subtree push --prefix=my/folder subtree_origin main'
 			> chạy lệnh này để nó nhận thư mục server và rồi đọc thông tin trong đó để install các thứ 
 			> vì nếu chạy lênh 'git push heroku main' có thể gặp lỗi sau (do nó không nhận biết được/không đọc được các file cấu hình app trong thư mục cha là thuộc nodejs, python, hay gì..):
 				Push failed
@@ -1984,4 +1985,5 @@ Ref react:https://www.w3schools.com/react/default.asp
 				> hoặc:
 					>>>git push heroku main:main
 						> push main ở local lên nhánh main của heroku
+						
 		
