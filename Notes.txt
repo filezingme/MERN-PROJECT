@@ -1923,7 +1923,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		...
 		{post && <UpdatePostModal/>}
 		
-- Deploy lên Heroku và Netlify
+- Deploy phần Server lên Heroku
 	- Update 'server\index.js'
 		const PORT = process.env.PORT || 5000
 	
@@ -1952,6 +1952,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 	- Download Heroku CLI & Cài nó
 		> 'https://devcenter.heroku.com/articles/heroku-cli'
 		> chọn 'Windows 64-bit installer'
+		
 	- Cài xong, mở CMD gõ lần lượt lệnh theo các bước:
 		>>> cd MERN-PROJECT (thư mục cha mà chứa folders 'Client' vs 'server')
 		>>> heroku login
@@ -1966,7 +1967,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		>>> git subtree push --prefix server heroku main 
 			> cú pháp: 'git subtree push --prefix=my/folder subtree_origin main'
 			> chạy lệnh này để nó nhận thư mục server và rồi đọc thông tin trong đó để install các thứ 
-			> vì nếu chạy lênh 'git push heroku main' có thể gặp lỗi sau (do nó không nhận biết được/không đọc được các file cấu hình app trong thư mục cha là thuộc nodejs, python, hay gì..):
+			> nếu file index.js nằm trong thư mục cha thì chạy lệnh 'git push heroku main' sẽ ok, nhưng hiện tại file index.js nằm trong thư mục server nên nếu chạy lệnh 'git push heroku main' có thể gặp lỗi sau (do nó không nhận biết được/không đọc được các file cấu hình app trong thư mục cha là thuộc nodejs, python, hay gì..):
 				Push failed
 				Push rejected to pacific-plains-99595.
 				! [remote rejected] main -> main (pre-receive hook declined)
@@ -1986,4 +1987,79 @@ Ref react:https://www.w3schools.com/react/default.asp
 					>>>git push heroku main:main
 						> push main ở local lên nhánh main của heroku
 						
+	- Tạo biến môi trường trong heroku (tương tự các biến ở file 'server\.env')
+		>>> heroku config:set DB_USERNAME=sa
+		>>> heroku config:set DB_PASSWORD=bangkieu
+		>>> heroku config:set ACCESS_TOKEN_SECRET=fhsaiofyw9euhfgslafls
 		
+		> Lưu ý: 
+			> Ta cũng có thể tạo thủ công trong heroku tại 'https://dashboard.heroku.com/apps/peaceful-island-09812/settings'
+			
+	- Check thử xem react app kết nối tới server trên heroku vừa deploy ok chưa?
+		- Update 'client\src\constants\commonContant.js'
+			export const API_URL = 
+			process.env.NODE_ENV !== 'production' 
+			? 'https://peaceful-island-09812.herokuapp.com/api' 
+			: 'production-api-url'
+			
+			> Lưu ý:
+				> subdomain 'https://peaceful-island-09812.herokuapp.com' được cung cấp ở terminal khi chạy lệnh 'git subtree push --prefix server heroku main' ở phía trên
+		
+		- Chạy thử client:
+			>>> npm start 
+				- 'http://localhost:3000/dashboard'
+					> Check console của trình duyệt thấy link api là 'https://peaceful-island-09812.herokuapp.com/api' là oke
+					
+		- Bước test trên ok rồi thì:
+			- Update 'client\src\constants\commonContant.js'
+				export const API_URL = 
+				process.env.NODE_ENV !== 'production' 
+				? 'http://localhost:5000/api' 
+				: 'https://peaceful-island-09812.herokuapp.com/api'
+				
+
+- Deploy phần Client (React App) lên Netlify 
+	- Trong thư mục '\client'
+		>>> npm run build
+	
+	- Cài 'serve' để chạy bản build ở trên
+		>>> npm install -g serve
+		>>> serve build HOẶC >>> serve -s build
+			> Nó sẽ chạy bản build, cung cấp url sau:				
+			   ┌────────────────────────────────────────────────────┐
+			   │   Serving!                                         │
+			   │   - Local:            http://localhost:3000        │
+			   │   - On Your Network:  http://192.168.136.33:3000   │
+			   │   Copied local address to clipboard!               │
+			   └────────────────────────────────────────────────────┘
+			   
+   - Push source code từ thư mục cha '\MERN-PROJECT' lên github
+		> Đã làm ở đầu file notes này, lưu ý git config cả github và heroku như file '.config' này:
+		/*
+			[core]
+				repositoryformatversion = 0
+				filemode = false
+				bare = false
+				logallrefupdates = true
+				symlinks = false
+				ignorecase = true
+			[remote "origin"]
+				url = https://filezingme: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@github.com/filezingme/MERN-PROJECT.git
+				fetch = +refs/heads/*:refs/remotes/origin/*
+			[branch "main"]
+				remote = origin
+				merge = refs/heads/main
+			[remote "heroku"]
+				url = https://git.heroku.com/peaceful-island-09812.git
+				fetch = +refs/heads/*:refs/remotes/heroku/*
+		*/
+		
+		>>> git status
+		>>> git add .
+		>>> git commit -m "prepare deploy"
+		
+	- Truy cập 'https://www.netlify.com/'
+		- Đăng nhập bằng tài khoản github: filezingme/fbiA
+		- Vào tab 'Sites' 
+			'https://app.netlify.com/teams/filezingme/sites'
+		- Chọn 'Import from Git'
