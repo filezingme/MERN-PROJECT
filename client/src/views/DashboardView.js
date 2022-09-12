@@ -60,7 +60,7 @@ const DashboardView = () => {
       </Row>
 
       {/* Open Add Post Modal */}
-      <OverlayTrigger placement="left" overlay={<Tooltip>Add a new thing to learn</Tooltip>}>
+      <OverlayTrigger placement="left" overlay={<Tooltip>Add a new post</Tooltip>}>
         <Button className="btn-floating" onClick={setShowAddPostModal.bind(this, true)}>
           <img src={addIcon} alt='add-post' width={60} height='60' />
         </Button>
