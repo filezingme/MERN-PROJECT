@@ -2034,6 +2034,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 			   └────────────────────────────────────────────────────┘
 			   
    - Push source code từ thư mục cha '\MERN-PROJECT' lên github
+		> Lưu ý: push code lên heroku với nhánh main thì push lên github phải tên nhánh khác ví dụ 'master', tránh trùng tên nhánh main ở 2 môi trường vì sẽ conflict
 		> Đã làm ở đầu file notes này, lưu ý git config cả github và heroku như file '.config' này:
 		/*
 			[core]
@@ -2046,12 +2047,15 @@ Ref react:https://www.w3schools.com/react/default.asp
 			[remote "origin"]
 				url = https://filezingme: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@github.com/filezingme/MERN-PROJECT.git
 				fetch = +refs/heads/*:refs/remotes/origin/*
-			[branch "main"]
+			[branch "master"]
 				remote = origin
-				merge = refs/heads/main
+				merge = refs/heads/master
 			[remote "heroku"]
 				url = https://git.heroku.com/peaceful-island-09812.git
 				fetch = +refs/heads/*:refs/remotes/heroku/*
+			[branch "main"]
+				remote = heroku
+				merge = refs/heads/main
 		*/
 		
 		>>> git status
