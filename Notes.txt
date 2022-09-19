@@ -2061,7 +2061,11 @@ Ref react:https://www.w3schools.com/react/default.asp
 		>>> git status
 		>>> git add .
 		>>> git commit -m "prepare deploy"
-		>>> git push -u origin main
+		>>> git branch -M master
+		>>> git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+		>>> git push -u origin master
+		
+		>>> git push heroku  main
 		
 	- Truy cập 'https://www.netlify.com/'
 		- Đăng nhập bằng tài khoản github: filezingme/fbiA
