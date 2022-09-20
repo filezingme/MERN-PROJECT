@@ -1,3 +1,8 @@
+Tạo một github personal access token mới (20220920) full permission: 'https://github.com/settings/tokens'
+	- Access token name: Personal access token - full all options - no expiry
+	- ghp_Kb7oILs5B9dEdb2dKdK7hDRQugc9gV3J....(hide 4 kí tự cuối)
+
+--------------------------------------------------------------------------
 Learn at 'https://www.youtube.com/watch?v=rgFd17fyM4A'
 
 Ref react:https://www.w3schools.com/react/default.asp
