@@ -2099,11 +2099,11 @@ Ref react:https://www.w3schools.com/react/default.asp
 		>>> heroku login
 		>>> heroku create
 			
-			> vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/glacial-chamber-01131/deploy/heroku-git' để xem các lệnh git tiếp theo
+			> vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/damp-eyrie-82052/deploy/heroku-git' để xem các lệnh git tiếp theo
 			
 			>>> git init
-			>>> heroku git:remote -a glacial-chamber-01131
-				> 'glacial-chamber-01131' là tên app cần phải thay
+			>>> heroku git:remote -a damp-eyrie-82052
+				> 'damp-eyrie-82052' là tên app cần phải thay
 			>>> git add .
 			>>> git commit -am "make it better"
 			>>> git push heroku master
@@ -2117,27 +2117,27 @@ Ref react:https://www.w3schools.com/react/default.asp
 			>>> heroku config:set ACCESS_TOKEN_SECRET=fhsaiofyw9euhfgslafls
 		
 			> Lưu ý: 
-				> Ta cũng có thể tạo thủ công trong heroku tại 'https://dashboard.heroku.com/apps/glacial-chamber-01131/settings'
+				> Ta cũng có thể tạo thủ công trong heroku tại 'https://dashboard.heroku.com/apps/damp-eyrie-82052/settings'
 			
 		- Check thử xem react app kết nối tới server trên heroku vừa deploy ok chưa?
 			- Update 'client\src\constants\commonContant.js'
 				export const API_URL = 
 				process.env.NODE_ENV === 'production' 
 				? 'http://localhost:5000/api' 
-				: 'https://glacial-chamber-01131.herokuapp.com/api'
+				: 'https://damp-eyrie-82052.herokuapp.com/api'
 				
 				> Lưu ý:
-					> subdomain 'https://glacial-chamber-01131.herokuapp.com' được cung cấp ở terminal khi chạy lệnh 'git push heroku master' ở phía trên
-					  hoặc click nút 'Open app' từ đây 'https://dashboard.heroku.com/apps/glacial-chamber-01131/settings'
+					> subdomain 'https://damp-eyrie-82052.herokuapp.com' được cung cấp ở terminal khi chạy lệnh 'git push heroku master' ở phía trên
+					  hoặc click nút 'Open app' từ đây 'https://dashboard.heroku.com/apps/damp-eyrie-82052/settings'
 			
 			- Chạy thử client:
-				>>> npm start 
+				>>> npm start (HOẶC >>> npm start --port 3001 HOẶC >>> npm start -- --port 3001)
 					- 'http://localhost:3000/dashboard'
-						> Check console của trình duyệt thấy link api là 'https://glacial-chamber-01131.herokuapp.com/api' là oke
+						> Check console của trình duyệt thấy link api là 'https://damp-eyrie-82052.herokuapp.com/api' là oke
 					
 			- Bước test trên ok rồi thì chỉnh lại:
 				- Update 'client\src\constants\commonContant.js'
 					export const API_URL = 
 					process.env.NODE_ENV !== 'production' 
 					? 'http://localhost:5000/api' 
-					: 'https://glacial-chamber-01131.herokuapp.com/api'
+					: 'https://damp-eyrie-82052.herokuapp.com/api'
