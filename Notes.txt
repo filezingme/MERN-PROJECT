@@ -1928,7 +1928,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 		...
 		{post && <UpdatePostModal/>}
 		
-- Deploy phần Server lên Heroku
+- Deploy phần Server lên Heroku (BỎ > XEM Deploy bên dưới...)
 	- Update 'server\index.js'
 		const PORT = process.env.PORT || 5000
 	
@@ -2023,7 +2023,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 				: 'https://peaceful-island-09812.herokuapp.com/api'
 				
 
-- Deploy phần Client (React App) lên Netlify 
+- Deploy phần Client (React App) lên Netlify (BỎ > XEM Deploy bên dưới...)
 	- Trong thư mục '\client'
 		>>> npm run build
 	
@@ -2095,21 +2095,44 @@ Ref react:https://www.w3schools.com/react/default.asp
 - BỎ QUA TẤT CẢ DEPLOY server và client ở trên, LÀM LẠI NHƯ DƯỚI ĐÂY
 
 	- Deploy phần Server lên Heroku
+
+		- Tạo file 'server\.gitignore'
+			- File content:
+				.env
+				node_modules/
+			
+			> rất quan trọng, bởi vì nếu không tạo file này trong thư mục server thì nó sẽ đẩy hết files trong thư mục 'node_modules' lên heroku và deploy sẽ gây lỗi.
+			
+		- Chỉ định version của Node cho heroku deploy nếu cần, add 'engines' > 'node'
+			- Update 'server\package.json'
+				{
+				  ...,
+				  "scripts": {
+					...
+				  },
+				  ...,
+				  "dependencies": {
+					...
+				  },
+				  "engines": {
+					"node": "18.8.0"
+				  }
+				}
+			> Nếu không chỉ định thì mặc định npm install sẽ là latest version
+		
 		>>> cd server
 		>>> heroku login
 		>>> heroku create
 			
-			> vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/damp-eyrie-82052/deploy/heroku-git' để xem các lệnh git tiếp theo
+			> vào tab 'Deploy' của app vừa tạo ở trên 'https://dashboard.heroku.com/apps/serene-brook-53814/deploy/heroku-git' để xem các lệnh git tiếp theo
 			
 			>>> git init
-			>>> heroku git:remote -a damp-eyrie-82052
-				> 'damp-eyrie-82052' là tên app cần phải thay
+			>>> heroku git:remote -a serene-brook-53814
+				> 'serene-brook-53814' là tên app cần phải thay
 			>>> git add .
 			>>> git commit -am "make it better"
 			>>> git push heroku master
-				> Nếu lỗi 'nothing to commit, working tree clean' (bỏ qua, ko dùng): 
-					>>> git subtree add . --prefix master
-					>>> git subtree push --prefix master 
+				> check logs nếu có lỗi hoặc xem tiến trình install tới đâu 'https://dashboard.heroku.com/apps/serene-brook-53814/logs'
 						
 		- Tạo biến môi trường trong heroku (tương tự các biến ở file 'server\.env')
 			>>> heroku config:set DB_USERNAME=sa
@@ -2117,27 +2140,99 @@ Ref react:https://www.w3schools.com/react/default.asp
 			>>> heroku config:set ACCESS_TOKEN_SECRET=fhsaiofyw9euhfgslafls
 		
 			> Lưu ý: 
-				> Ta cũng có thể tạo thủ công trong heroku tại 'https://dashboard.heroku.com/apps/damp-eyrie-82052/settings'
+				> Ta cũng có thể tạo thủ công trong heroku tại 'https://dashboard.heroku.com/apps/serene-brook-53814/settings'
 			
 		- Check thử xem react app kết nối tới server trên heroku vừa deploy ok chưa?
 			- Update 'client\src\constants\commonContant.js'
 				export const API_URL = 
 				process.env.NODE_ENV === 'production' 
 				? 'http://localhost:5000/api' 
-				: 'https://damp-eyrie-82052.herokuapp.com/api'
+				: 'https://serene-brook-53814.herokuapp.com/api'
 				
 				> Lưu ý:
-					> subdomain 'https://damp-eyrie-82052.herokuapp.com' được cung cấp ở terminal khi chạy lệnh 'git push heroku master' ở phía trên
-					  hoặc click nút 'Open app' từ đây 'https://dashboard.heroku.com/apps/damp-eyrie-82052/settings'
+					> subdomain 'https://serene-brook-53814.herokuapp.com' được cung cấp ở terminal khi chạy lệnh 'git push heroku master' ở phía trên
+					  hoặc click nút 'Open app' từ đây 'https://dashboard.heroku.com/apps/serene-brook-53814/settings'
 			
 			- Chạy thử client:
 				>>> npm start (HOẶC >>> npm start --port 3001 HOẶC >>> npm start -- --port 3001)
 					- 'http://localhost:3000/dashboard'
-						> Check console của trình duyệt thấy link api là 'https://damp-eyrie-82052.herokuapp.com/api' là oke
+						> Check console của trình duyệt thấy link api là 'https://serene-brook-53814.herokuapp.com/api' là oke
 					
 			- Bước test trên ok rồi thì chỉnh lại:
 				- Update 'client\src\constants\commonContant.js'
 					export const API_URL = 
 					process.env.NODE_ENV !== 'production' 
 					? 'http://localhost:5000/api' 
-					: 'https://damp-eyrie-82052.herokuapp.com/api'
+					: 'https://serene-brook-53814.herokuapp.com/api'
+					
+	
+	- Deploy phần Client (React App) lên Netlify 
+		- Trong thư mục '\client'
+			>>> npm run build
+		
+		- Cài 'serve' để chạy bản build ở trên
+			>>> npm install -g serve
+			>>> serve build HOẶC >>> serve -s build
+				> Nó sẽ chạy bản build, cung cấp url sau:				
+				   ┌────────────────────────────────────────────────────┐
+				   │   Serving!                                         │
+				   │   - Local:            http://localhost:3000        │
+				   │   - On Your Network:  http://192.168.136.33:3000   │
+				   │   Copied local address to clipboard!               │
+				   └────────────────────────────────────────────────────┘
+
+		- Tạo file 'client\.gitignore'
+			- File content: xem trong project
+				   
+	   - Push source code từ thư mục cha 'MERN-PROJECT\client' lên github
+			> Lưu ý: push code lên heroku với nhánh main thì push lên github phải tên nhánh khác ví dụ 'master', tránh trùng tên nhánh main ở 2 môi trường vì sẽ conflict
+			> Đã làm ở đầu file notes này, lưu ý git config cả github và heroku như file '.config' này:
+			/*
+				[core]
+					repositoryformatversion = 0
+					filemode = false
+					bare = false
+					logallrefupdates = true
+					symlinks = false
+					ignorecase = true
+				[remote "origin"]
+					url = https://filezingme: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@github.com/filezingme/MERN-PROJECT.git
+					fetch = +refs/heads/*:refs/remotes/origin/*
+				[branch "master"]
+					remote = origin
+					merge = refs/heads/master
+				[remote "heroku"]
+					url = https://git.heroku.com/peaceful-island-09812.git
+					fetch = +refs/heads/*:refs/remotes/heroku/*
+				[branch "main"]
+					remote = heroku
+					merge = refs/heads/main
+			*/
+			
+			>>> git status
+			>>> git add .
+			>>> git commit -m "github prepare deploy"
+			>>> git branch -M master
+			>>> git remote add origin https://github.com/filezingme/MERN-PROJECT.git
+			>>> git push -u origin master
+			
+			>>> heroku git:remote -a peaceful-island-09812
+			>>> git branch -M main
+			>>> git add .
+			>>> git status
+			>>> git commit -m "heroku prepare deploy"
+					> nếu cần thì
+						>>> git pull heroku main
+						>>> git push -f heroku  main HOẶC >>> git push heroku main:main
+			>>> git subtree push --prefix server heroku main 
+			
+			> Nếu lỗi 'fatal: refusing to merge unrelated histories' thì:
+				>>> git pull origin master --allow-unrelated-histories
+				>>> git pull heroku main --allow-unrelated-histories
+			
+		- Truy cập 'https://www.netlify.com/'
+			- Đăng nhập bằng tài khoản github: filezingme/fbiA
+			- Vào tab 'Sites' 
+				'https://app.netlify.com/teams/filezingme/sites'
+			- Chọn 'Import from Git'
+			
