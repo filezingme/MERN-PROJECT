@@ -2240,4 +2240,26 @@ Ref react:https://www.w3schools.com/react/default.asp
 								- Click 'Options'
 									- Edit site name: taitd1
 										> Site mới: 'https://taitd1.netlify.app'
-
+				- Lưu ý: 
+					- Muốn deploy lại thì:
+						- Click 'Deploys'
+						- Click 'Trigger deploy'
+						- Click 'Clear cache and deploy site' > nên click cái này
+					
+					- Fix lỗi nếu refresh subpage url dạng 'https://taitd1.netlify.app/login' bị lỗi 'Page Not Found'
+						- Nguyên nhân: Thằng React routing nó là dạng client routing, còn mặc định thằng netlify là server routing nên nó sẽ khác
+							> Server routing nó sẽ chui vào tìm folder tên là '/login' hoặc '/register' nhưng không tìm thấy nên nó hiện lỗi 'Page Not Found'
+							
+						- Giải pháp:
+							- Tạo file 'client\public\_redirects', có nội dung:
+								/index.html 200							
+							> Ref 'https://dev.to/rajeshroyal/page-not-found-error-on-netlify-reactjs-react-router-solved-43oa'
+							
+							- Commit code và deploy lại:
+								>>> git add .
+								>>> git commit -m "fix Netlify routing"
+								>>> git push -u origin main
+								
+								> Push github xong thì Netlify sẽ tự động phát hiện và auto deploy
+									> Giờ thì vô tư refresh nhưng ko lỗi 'Page Not Found' nữa
+									> https://taitd1.netlify.app/login
