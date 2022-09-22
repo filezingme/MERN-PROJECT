@@ -2169,6 +2169,7 @@ Ref react:https://www.w3schools.com/react/default.asp
 	- Deploy phần Client (React App) lên Netlify 
 		- Trong thư mục '\client'
 			>>> npm run build
+				> lệnh này sẽ tạo ra thư mục 'client\build' chứa bản deploy để push lên host chạy
 		
 		- Cài 'serve' để chạy bản build ở trên
 			>>> npm install -g serve
@@ -2184,55 +2185,59 @@ Ref react:https://www.w3schools.com/react/default.asp
 		- Tạo file 'client\.gitignore'
 			- File content: xem trong project
 				   
-	   - Push source code từ thư mục cha 'MERN-PROJECT\client' lên github
-			> Lưu ý: push code lên heroku với nhánh main thì push lên github phải tên nhánh khác ví dụ 'master', tránh trùng tên nhánh main ở 2 môi trường vì sẽ conflict
-			> Đã làm ở đầu file notes này, lưu ý git config cả github và heroku như file '.config' này:
-			/*
-				[core]
-					repositoryformatversion = 0
-					filemode = false
-					bare = false
-					logallrefupdates = true
-					symlinks = false
-					ignorecase = true
-				[remote "origin"]
-					url = https://filezingme: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@github.com/filezingme/MERN-PROJECT.git
-					fetch = +refs/heads/*:refs/remotes/origin/*
-				[branch "master"]
-					remote = origin
-					merge = refs/heads/master
-				[remote "heroku"]
-					url = https://git.heroku.com/peaceful-island-09812.git
-					fetch = +refs/heads/*:refs/remotes/heroku/*
-				[branch "main"]
-					remote = heroku
-					merge = refs/heads/main
-			*/
-			
-			>>> git status
+	   - Push source code từ thư mục cha 'MERN-PROJECT\client' lên github	
+			>>> git init
 			>>> git add .
-			>>> git commit -m "github prepare deploy"
-			>>> git branch -M master
-			>>> git remote add origin https://github.com/filezingme/MERN-PROJECT.git
-			>>> git push -u origin master
-			
-			>>> heroku git:remote -a peaceful-island-09812
+			>>> git status
+			>>> git commit -m "first commit"
 			>>> git branch -M main
-			>>> git add .
-			>>> git status
-			>>> git commit -m "heroku prepare deploy"
-					> nếu cần thì
-						>>> git pull heroku main
-						>>> git push -f heroku  main HOẶC >>> git push heroku main:main
-			>>> git subtree push --prefix server heroku main 
-			
-			> Nếu lỗi 'fatal: refusing to merge unrelated histories' thì:
-				>>> git pull origin master --allow-unrelated-histories
-				>>> git pull heroku main --allow-unrelated-histories
+			>>> git remote add origin https://github.com/filezingme/MERN-PROJECT-client.git
+			>>> git push -u origin main
 			
 		- Truy cập 'https://www.netlify.com/'
 			- Đăng nhập bằng tài khoản github: filezingme/fbiA
 			- Vào tab 'Sites' 
 				'https://app.netlify.com/teams/filezingme/sites'
 			- Chọn 'Import from Git'
-			
+				- Chọn github
+				- Xác thực xong hiện hết các repo từ github thì search chọn 'MERN-PROJECT-client'
+					- Owner: Team 1
+					- Branch to deploy: main
+					- Base directory: để trống (chỉ dùng khi muốn build từ thư mục con trong repo)
+					- Build command: npm run build
+					- Publish directory: build
+					- Advanced build settings: tạm thời để mặc định hết
+				- Click 'Deploy site'
+				- Hiện cửa sổ tiến trình deploy
+					- Click 'Production: main@HEAD Failed' để xem Deploy log thông tin quá trình deploy
+					- Deploy chắc chắn sẽ fail, nên sẽ thay đổi 1 chút ở bước dưới
+				- Vào 'Site settings'
+					- Click 'Build & deploy'
+					- Click 'Continuous Deployment'
+					- Click 'Build settings' > 'Edit settings'
+						- Thay đổi:
+							- Build command: CI=false npm run build
+								> Cách khác: tạo một biến môi trường tên là CI và có value là false:
+									Once your deployment is failed, go to Deploys -> Deployment Settings.
+									There you will see Environment tab. Then click Environment Variables -> Edit Variables
+									Key: CI Value: False
+									Redeploy with clearing cache. Hopefully it will help!	
+								
+								> ref 'https://stackoverflow.com/questions/62415804/how-to-prevent-netlify-from-treating-warnings-as-errors-because-process-env-ci'
+
+						- Click 'Save'
+					- Quay trở lại phần deploy:
+						- Click 'Retry Deploy'
+							> Nhớ click xem logs nếu thích
+						
+						- Deploy success thì click 'Open production deploy' hoặc 'Preview' để xem site
+							> site: 'https://632c20f32d9a4f6c5022bae8--celebrated-sundae-4efde5.netlify.app/login'
+							
+						- Thay đổi site name cho dễ nhớ:
+							- Click 'Site settings'
+							- Click 'Domain management'
+							- Click 'Custom domains'
+								- Click 'Options'
+									- Edit site name: taitd1
+										> Site mới: 'https://taitd1.netlify.app'
+
